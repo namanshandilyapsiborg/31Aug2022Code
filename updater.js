@@ -1,7 +1,7 @@
 const AutoGitUpdate = require("auto-git-update");
 const config = {
   repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code.git",
-  fromReleases: false,
+  fromReleases: true,
   tempLocation: "D:/PsiBorg",
   token: "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",
   //ignoreFiles: ['util/config.js'],
