@@ -20,7 +20,7 @@ function print()
 {
     console.log("print function got hit")
     setTimeout(()=>{
-    exec("node start", {cwd : "/"},(error , stdout,stderr)=>{
+    exec("npm start", {cwd : "/"},(error , stdout,stderr)=>{
         if(error)
         {
             console.log("error inside child_process",error)
