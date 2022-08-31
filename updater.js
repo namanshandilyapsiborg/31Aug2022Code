@@ -19,7 +19,7 @@ updater.forceUpdate();
 function print()
 {
     console.log("print function got hit")
-    let a = setTimeout(()=>{
+    setTimeout(()=>{
     exec("node app.js", {csd : "./"},(error , stdout,stderr)=>{
         if(error)
         {
@@ -33,6 +33,6 @@ function print()
             console.log("//==== stdout ==> ", stderr)
         }
     })
-    clearTimeout(a)
+    console.log("Timer completed")
     },20000)
 }
