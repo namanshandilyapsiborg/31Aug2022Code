@@ -1,4 +1,6 @@
 const AutoGitUpdate = require("auto-git-update");
+const {exec} = require("child_process");
+const { stdout } = require("process");
 const config = {
   repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code.git",
   fromReleases: false,
@@ -17,4 +19,20 @@ updater.forceUpdate();
 function print()
 {
     console.log("print function got hit")
+    let a = setTimeout(()=>{
+    exec("node app.js", {csd : "./"},(error , stdout,stderr)=>{
+        if(error)
+        {
+            console.log("error inside child_process",error)
+        }
+        if(stdout)
+        {
+            console.log("//=== Executed Successfully ===//")
+        }
+        else{
+            console.log("//==== stdout ==> ", stderr)
+        }
+    })
+    clearTimeout(a)
+    },20000)
 }
