@@ -20,7 +20,7 @@ function print()
 {
     console.log("print function got hit")
     setTimeout(()=>{
-    exec("node /gitUpdaterNodejs/app.js", {cwd : "/"},(error , stdout,stderr)=>{
+    exec("node start", {cwd : "/"},(error , stdout,stderr)=>{
         if(error)
         {
             console.log("error inside child_process",error)
