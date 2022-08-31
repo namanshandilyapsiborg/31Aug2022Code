@@ -1,5 +1,5 @@
 const AutoGitUpdate = require("auto-git-update");
-const {exec} = require("child_process");
+const {exec , spawn} = require("child_process");
 const { stdout } = require("process");
 const config = {
   repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code.git",
@@ -20,19 +20,20 @@ function print()
 {
     console.log("print function got hit")
     setTimeout(()=>{
-    exec("npm start", {cwd : "/gitUpdaterNodejs/"},(error , stdout,stderr)=>{
-        if(error)
-        {
-            console.log("error inside child_process",error)
-        }
-        if(stdout)
-        {
-            console.log("//=== Executed Successfully ===//")
-        }
-        else{
-            console.log("//==== stdout ==> ", stderr)
-        }
-    })
+        const child = spawn('npm i',{
+            stdio : 'inherit',
+            shell : true,
+            cwd : './'
+        })
+        
+        child.on('close', (code) => {                 //--> after build run the frontend
+            console.log(`child process exited with code ${code}`);
+            spawn('node app.js', {
+                stdio: 'inherit',
+                shell: true,
+                cwd: './'
+            })
+        });
     console.log("Timer completed")
     },20000)
 }
