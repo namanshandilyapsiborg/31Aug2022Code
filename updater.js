@@ -9,7 +9,7 @@ const config = {
   //ignoreFiles: ['util/config.js'],
   //executeOnComplete: 'C:/Users/scheg/Desktop/worksapce/AutoGitUpdate/startTest.bat',
   executeOnComplete: print(),
-  exitOnComplete: true,
+  exitOnComplete: false,
 };
 const updater = new AutoGitUpdate(config);
 //updater.autoUpdate();
