@@ -13,27 +13,27 @@ const config = {
 };
 const updater = new AutoGitUpdate(config);
 //updater.autoUpdate();
-updater.forceUpdate();
-//updater.compareVersions();
+//updater.forceUpdate();
+updater.compareVersions();
 
 function print()
 {
     console.log("print function got hit")
-    setTimeout(()=>{
-        const child = spawn('npm i',{
-            stdio : 'inherit',
-            shell : true,
-            cwd : './'
-        })
+    // setTimeout(()=>{
+    //     const child = spawn('npm i',{
+    //         stdio : 'inherit',
+    //         shell : true,
+    //         cwd : './'
+    //     })
         
-        child.on('close', (code) => {                 //--> after build run the frontend
-            console.log(`child process exited with code ${code}`);
-            spawn('node app.js', {
-                stdio: 'inherit',
-                shell: true,
-                cwd: './'
-            })
-        });
-    console.log("Timer completed")
-    },20000)
+    //     child.on('close', (code) => {                 //--> after build run the frontend
+    //         console.log(`child process exited with code ${code}`);
+    //         spawn('node app.js', {
+    //             stdio: 'inherit',
+    //             shell: true,
+    //             cwd: './'
+    //         })
+    //     });
+    // console.log("Timer completed")
+    // },20000)
 }
