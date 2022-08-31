@@ -17,8 +17,8 @@ const updater = new AutoGitUpdate(config);
 
 try {
     //
-    updater.forceUpdate();
-    //updater.compareVersions();
+    //updater.forceUpdate();
+    updater.compareVersions();
 } catch (e) { console.log("E : ", e) }
 
 
