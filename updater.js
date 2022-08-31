@@ -1,8 +1,9 @@
 const AutoGitUpdate = require("auto-git-update");
 const { exec, spawn } = require("child_process");
-const { stdout } = require("process");
+const { stdout, mainModule } = require("process");
 const config = {
     repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code.git",
+    branch : 'main',
     fromReleases: false,
     tempLocation: "D:/PsiBorg",
     token: "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",
@@ -13,9 +14,11 @@ const config = {
 };
 const updater = new AutoGitUpdate(config);
 //updater.autoUpdate();
-//updater.forceUpdate();
+
 try {
-    updater.compareVersions();
+    //
+    updater.forceUpdate();
+    //updater.compareVersions();
 } catch (e) { console.log("E : ", e) }
 
 
