@@ -18,7 +18,7 @@ const updater = new AutoGitUpdate(config);
 try {
     
     //updater.forceUpdate();
-    updater.compareVersions();
+    //updater.compareVersions();
     setInterval(async()=>{
         let versionChecker = await updater.compareVersions();
         console.loge("version Checker value ===> ", versionChecker)
