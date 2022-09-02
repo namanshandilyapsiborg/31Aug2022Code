@@ -32,7 +32,7 @@ try {
         if(versionChecker["remoteVersion"] && versionChecker.currentVersion != versionChecker.remoteVersion)
         {
             console.log("//=== Verisons are not same ===//")
-            let updating = await updater.autoUpdate();
+            let updating = await updater.forceUpdate();
             
             if(updating)
             {
@@ -43,7 +43,7 @@ try {
         {
             console.log("//==== Version is UpDated ===//")
         }
-    },20000)
+    },30000)
 } catch (e) { console.log("E : ", e) }
 
 
