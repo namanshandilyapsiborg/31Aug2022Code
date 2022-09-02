@@ -3,22 +3,30 @@ const { exec, spawn } = require("child_process");
 const { stdout, mainModule } = require("process");
 const config = {
     repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code.git",
-    branch : 'main',
+    //branch : 'main',
     fromReleases: false,
     tempLocation: "D:/PsiBorg",
-    token: "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",
+    //token: "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",
     //ignoreFiles: ['util/config.js'],
     //executeOnComplete: 'C:/Users/scheg/Desktop/worksapce/AutoGitUpdate/startTest.bat',
-    executeOnComplete: print(),
+    //executeOnComplete: print(),
     exitOnComplete: false,
 };
 const updater = new AutoGitUpdate(config);
 //updater.autoUpdate();
 
 try {
-    //
+    
     //updater.forceUpdate();
     updater.compareVersions();
+    setInterval(async()=>{
+        let versionChecker = await updater.compareVersions();
+        console.loge("version Checker value ===> ", versionChecker)
+        if(versionChecker.currentVersion != versionChecker.remoteVersion)
+        {
+            console.log("//=== Verisons are not same ===//")
+        }
+    },20000)
 } catch (e) { console.log("E : ", e) }
 
 
