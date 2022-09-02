@@ -416,7 +416,7 @@ parser.on("data", (data) => {
 
 
 //================================== Git Code Updater ========================================//
-function forceUpdater() {
+async function forceUpdater() {
     console.log("//========================== ForceUpdater func() =========================//")
     let versionChecker = await updater.compareVersions();
     console.log("version Checker value ===> ", versionChecker)
