@@ -440,7 +440,9 @@ function forceUpdater() {
                 })
 
             child2.on('close', (code)=>{
-                exec("sudo reboot");
+                setTimeout(()=>{
+                    exec("sudo reboot");
+                },5000)
             })    
             });
             console.log("//====== Timer Completed =====//")
