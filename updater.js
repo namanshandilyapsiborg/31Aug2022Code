@@ -25,7 +25,7 @@ try {
     
     //updater.forceUpdate();
     //updater.compareVersions();
-    setInterval(async()=>{
+    let updateTimer = setInterval(async()=>{
         let versionChecker = await updater.compareVersions();
         console.log("version Checker value ===> ", versionChecker)
         //if(versionChecker.currentVersion != versionChecker.remoteVersion)
@@ -56,6 +56,7 @@ try {
                 });
                 console.log("//====== Timer Completed =====//")
                 clearTimeout(timer)
+                clearTimeout(updateTimer)
             }, 300000)
         
         }
