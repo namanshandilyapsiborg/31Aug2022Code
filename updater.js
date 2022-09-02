@@ -5,7 +5,7 @@ const config = {
     repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code",
     //branch : 'main',
     fromReleases: false,
-    //tempLocation: "D:/PsiBorg",
+    tempLocation: "D:/PsiBorg",
     //token: "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",
     //ignoreFiles: ['util/config.js'],
     //executeOnComplete: 'C:/Users/scheg/Desktop/worksapce/AutoGitUpdate/startTest.bat',
@@ -15,9 +15,9 @@ const config = {
 const updater = new AutoGitUpdate(config);
 //updater.autoUpdate();
 
-async function forceUpdater()
+function forceUpdater()
 {
-    await updater.autoUpdate();
+    updater.forceUpdate();
 }
 
 forceUpdater()
@@ -76,21 +76,4 @@ function updatewithTimer()
 
 function print() {
     console.log("//=== print function got hit ====//")
-    // setTimeout(()=>{
-    //     const child = spawn('npm i',{
-    //         stdio : 'inherit',
-    //         shell : true,
-    //         cwd : './'
-    //     })
-
-    //     child.on('close', (code) => {                 //--> after build run the frontend
-    //         console.log(`child process exited with code ${code}`);
-    //         spawn('node app.js', {
-    //             stdio: 'inherit',
-    //             shell: true,
-    //             cwd: './'
-    //         })
-    //     });
-    // console.log("Timer completed")
-    // },20000)
 }
