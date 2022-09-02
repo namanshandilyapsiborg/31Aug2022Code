@@ -21,7 +21,7 @@ try {
     //updater.compareVersions();
     setInterval(async()=>{
         let versionChecker = await updater.compareVersions();
-        console.loge("version Checker value ===> ", versionChecker)
+        console.log("version Checker value ===> ", versionChecker)
         //if(versionChecker.currentVersion != versionChecker.remoteVersion)
         if(versionChecker["remoteVersion"] && versionChecker.currentVersion != versionChecker.remoteVersion)
         {
