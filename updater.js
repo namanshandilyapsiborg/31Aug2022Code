@@ -33,11 +33,31 @@ try {
         {
             console.log("//=== Verisons are not same ===//")
             let updating = await updater.forceUpdate();
-            
-            if(updating)
-            {
-                console.log("updating status ===> ", updating);
-            }
+            let timer = setTimeout(() => {
+                const child = spawn('npm i', {
+                    stdio: 'inherit',
+                    shell: true,
+                    cwd: './'
+                })
+    
+                child.on('close', (code) => {                 //--> after build run the frontend
+                    console.log(`child process exited with code ${code}`);
+                let child2 = spawn('npm i', {
+                        stdio: 'inherit',
+                        shell: true,
+                        cwd: './Saps_Rasp_Pubnub'
+                    })
+    
+                // child2.on('close', (code)=>{
+                //     setTimeout(()=>{
+                //         exec("sudo reboot");
+                //     },5000)
+                // })    
+                });
+                console.log("//====== Timer Completed =====//")
+                clearTimeout(timer)
+            }, 300000)
+        
         }
         else if(versionChecker.upToDate == true)
         {
