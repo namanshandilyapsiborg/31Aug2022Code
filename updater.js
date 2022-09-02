@@ -1,5 +1,6 @@
 const AutoGitUpdate = require("auto-git-update");
 const { exec, spawn } = require("child_process");
+const { resolve } = require("path");
 const { stdout, mainModule } = require("process");
 const config = {
     repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code",
@@ -15,6 +16,12 @@ const config = {
 const updater = new AutoGitUpdate(config);
 //updater.autoUpdate();
 
+async function forceUpdater()
+{
+    await updater.autoUpdate();
+}
+
+
 try {
     
     //updater.forceUpdate();
@@ -26,7 +33,7 @@ try {
         if(versionChecker["remoteVersion"] && versionChecker.currentVersion != versionChecker.remoteVersion)
         {
             console.log("//=== Verisons are not same ===//")
-            let updating = await updater.forceUpdate();
+            let updating = await updater.autoUpdate();
             
             if(updating)
             {
