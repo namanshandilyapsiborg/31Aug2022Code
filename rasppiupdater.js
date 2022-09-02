@@ -4,7 +4,7 @@ const { stdout, mainModule } = require("process");
 const config = {
     repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code",
     fromReleases: false,
-    tempLocation: "D:/PsiBorg",
+    tempLocation: "/home/pi/Downloads",
     //token: "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",
     executeOnComplete: print(),
     exitOnComplete: false,
