@@ -25,7 +25,8 @@ try {
         if(versionChecker.currentVersion != versionChecker.remoteVersion)
         {
             console.log("//=== Verisons are not same ===//")
-
+            let updating = updater.forceUpdate();
+            console.log("updating status ===> ", updating);
         }
         else if(versionChecker.upToDate == true)
         {
