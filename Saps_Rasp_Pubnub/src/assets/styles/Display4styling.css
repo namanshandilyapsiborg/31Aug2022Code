@@ -1,0 +1,66 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-x: hidden; 
+  /* width : 100%; */
+  /* min-height: 100%; */
+}
+
+/* video
+{
+  width : 100% ;
+  height : 100%; 
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+} */
+
+.part1 {
+  /* background-color: red; */
+  width: 50%;
+  height: 50vh;
+  float: left;
+  background-size: cover;
+  background-position: center;
+}
+.part2 {
+  /* background-color: blue; */
+  width: 50%;
+  height: 50vh;
+  float: left;
+  /* background-size: cover;
+  background-position: center; */
+}
+.part3 {
+  /* background-color: green; */
+  width: 50%;
+  height: 50vh;
+  float: left;
+  /* background-size: cover;
+  background-position: center; */
+}
+.part4 {
+  /* background-color: yellow; */
+  width: 50%;
+  height: 50vh;
+  float: left;
+  /* background-size: cover;
+  background-position: center; */
+}
+
+.divs-wrapper:before{
+  content : "";
+  position : absolute;
+  background: url("../../Images/SapsPurple.jpg");
+  width: 60px;
+  height : 20px;
+  border-radius: 10px;
+  margin-top: 25%;
+  margin-left : 2% ;
+  opacity: .6;
+  background-size: cover;
+  background-position: center;
+}

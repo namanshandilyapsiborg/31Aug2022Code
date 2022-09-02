@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f3c7a9f7.css",
+    "main.js": "/static/js/main.357e07ff.js",
+    "static/js/787.8112e318.chunk.js": "/static/js/787.8112e318.chunk.js",
+    "static/media/Beach_1080p.mp4": "/static/media/Beach_1080p.6b0771e9a37749505e1e.mp4",
+    "static/media/AnotherWorld_720p.mp4": "/static/media/AnotherWorld_720p.1e11b6c3082828adca13.mp4",
+    "static/media/Pattern - 12313.mp4": "/static/media/Pattern - 12313.18c8e09a2b171a9226ab.mp4",
+    "static/media/Animation.mp4": "/static/media/Animation.90e3c608d9998f0d8585.mp4",
+    "static/media/MountainDew_1080p.mp4": "/static/media/MountainDew_1080p.a54a7e14c856571f5a7f.mp4",
+    "static/media/Seoul_720p.mp4": "/static/media/Seoul_720p.ad1c727c4afa500c4a3a.mp4",
+    "static/media/Pepsi_720p.mp4": "/static/media/Pepsi_720p.bcebd36c4310e66b338f.mp4",
+    "static/media/SapsPurple.jpg": "/static/media/SapsPurple.b65fabc3536bfa5944c7.jpg",
+    "index.html": "/index.html",
+    "main.f3c7a9f7.css.map": "/static/css/main.f3c7a9f7.css.map",
+    "main.357e07ff.js.map": "/static/js/main.357e07ff.js.map",
+    "787.8112e318.chunk.js.map": "/static/js/787.8112e318.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f3c7a9f7.css",
+    "static/js/main.357e07ff.js"
+  ]
+}

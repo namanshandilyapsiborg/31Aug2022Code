@@ -1,10 +1,10 @@
 {
   "name": "31aug2022code",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "lol",
   "main": "index.js",
   "scripts": {
-    "start" : "nodemon app.js",
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,9 +19,18 @@
   },
   "homepage": "https://github.com/namanshandilyapsiborg/31Aug2022Code#readme",
   "dependencies": {
+    "@serialport/parser-readline": "^10.3.0",
     "auto-git-update": "^2.1.2",
     "child_process": "^1.0.2",
-    "express": "^4.18.1"
+    "download": "^8.0.0",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "onoff": "^6.0.3",
+    "pubnub": "^7.2.0",
+    "qr-image": "^3.2.0",
+    "rpi-wifi-connection": "^1.0.17",
+    "serialport": "^10.4.0",
+    "unzipper": "^0.10.11"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
