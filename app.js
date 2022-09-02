@@ -21,7 +21,7 @@ const config = {
     //token: "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",
     //ignoreFiles: ['util/config.js'],
     //executeOnComplete: 'C:/Users/scheg/Desktop/worksapce/AutoGitUpdate/startTest.bat',
-    executeOnComplete: print(),
+    //executeOnComplete: print(),
     exitOnComplete: false,
 };
 const updater = new AutoGitUpdate(config);
