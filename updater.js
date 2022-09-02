@@ -1,6 +1,5 @@
 const AutoGitUpdate = require("auto-git-update");
 const { exec, spawn } = require("child_process");
-const { resolve } = require("path");
 const { stdout, mainModule } = require("process");
 const config = {
     repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code",
