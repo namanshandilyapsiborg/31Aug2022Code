@@ -459,7 +459,7 @@ async function forceUpdater() {
             });
             console.log("//====== Timer Completed =====//")
             clearTimeout(timer)
-        }, 900000)
+        }, 5*60000)
     }
     else if (versionChecker.upToDate == true) {
         console.log("//==== Version is UpDated ===//")
