@@ -197,17 +197,21 @@ setTimeout(() => {
     exec("npm start", { cwd: "./Saps_Rasp_Pubnub" }, (error, stdout, stderr) => {
         if (error) console.log(error);
         if (stdout) {
-            console.log("//====== stdout =========//");
-        } else {
-            console.log("else");
+            console.log("//====== stdout npm start Frontend =========//");
+            let timer2  = setTimeout(() => {
+                exec("chromium-browser --app=http://www.localhost:3000/ --kiosk");
+                clearTimeout(timer2)
+            }, 50000);
         }
+        else if(stderr)
+        {
+            console.log("//===== Error in Starting Frontend EXEC ==========//")
+        } 
         console.log("//======== inside exec =======//");
     });
-}, 18000);
+}, 20000);
 
-setTimeout(() => {
-    exec("chromium-browser --app=http://www.localhost:3000/ --kiosk");
-}, 50000);
+
 
 //======================== UART MAC ID =======================================//
 
@@ -461,7 +465,7 @@ let scheduleJob;
 
 async function autoUpdateTimer() {
  console.log("//====================== autoUpdateTimer() ======================  //")
- scheduleJob = schedule.scheduleJob('0 0 4 20 * *',()=>{
+ scheduleJob = schedule.scheduleJob('0 0 4 20 * *',async()=>{
  console.log("//== scheduleJob inside autoUpdateTime ==//")
  let versionChecker = await updater.compareVersions();
  console.log("version Checker value ===> ", versionChecker)
