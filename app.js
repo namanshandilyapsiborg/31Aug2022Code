@@ -13,6 +13,7 @@ var qr = require("qr-image");
 //=========> For Git Update Library
 const AutoGitUpdate = require("auto-git-update");
 const { stdout, mainModule } = require("process");
+const schedule = require("node-schedule");
 
 const config = {
     repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code",
@@ -447,7 +448,7 @@ async function forceUpdater() {
             });
             console.log("//====== Timer Completed =====//")
             clearTimeout(timer)
-        }, 300000)
+        }, 400000)
     }
     else if (versionChecker.upToDate == true) {
         console.log("//==== Version is UpDated ===//")
@@ -455,9 +456,48 @@ async function forceUpdater() {
     }
 }
 
-let timers;
+let scheduleJob;
 
 function autoUpdateTimer() {
  console.log("//====================== autoUpdateTimer() ======================  //")
+ scheduleJob = schedule.scheduleJob('0 0 4 20 * *',()=>{
+ console.log("//== scheduleJob inside autoUpdateTime ==//")
+ let versionChecker = await updater.compareVersions();
+ console.log("version Checker value ===> ", versionChecker)
+ if (versionChecker["remoteVersion"] && versionChecker.currentVersion != versionChecker.remoteVersion) {
+     console.log("//=== Verisons are not same ===//")
+     updater.forceUpdate();
+
+     let timer = setTimeout(() => {
+         const child = spawn('npm i', {
+             stdio: 'inherit',
+             shell: true,
+             cwd: './'
+         })
+
+         child.on('close', (code) => {                 //--> after build run the frontend
+             console.log(`child process exited with code ${code}`);
+         let child2 = spawn('npm i', {
+                 stdio: 'inherit',
+                 shell: true,
+                 cwd: './Saps_Rasp_Pubnub'
+             })
+
+         child2.on('close', (code)=>{
+             setTimeout(()=>{
+                 exec("sudo reboot");
+             },5000)
+         })    
+         });
+         console.log("//====== Timer Completed =====//")
+         clearTimeout(timer)
+     }, 400000)
+ }
+ else if (versionChecker.upToDate == true) {
+     console.log("//==== Version is UpDated ===//")
+     return;
+ }
+
+ })
 }
 
