@@ -105,6 +105,10 @@ pubnub.addListener({
         if (messageEvent.message.eventname == "autoUpdateTimer") {
             autoUpdateTimer()
         }
+        if (messageEvent.message.eventname == "force reboot") {
+            console.log("//=== Rebooting ForceFully =========//")
+            exec("sudo reboot")
+        }
     },
     presence: function (presenceEvent) {
         console.log("Handle Presence ===> ", presenceEvent);
