@@ -12,7 +12,7 @@ const port = new SerialPort({ path: "/dev/ttyS0", baudRate: 115200 });
 var qr = require("qr-image");
 //=========> For Git Update Library
 const AutoGitUpdate = require("auto-git-update");
-const { stdout, mainModule } = require("process");
+const { stdout, mainModule, stderr } = require("process");
 const schedule = require("node-schedule");
 
 const config = {
@@ -193,23 +193,29 @@ function DeleteUserFiles(uniquefilename, filetype) {
 }
 
 //=============================== Auto Starting Backend =====================================//
-setTimeout(() => {
-    exec("npm start", { cwd: "./Saps_Rasp_Pubnub" }, (error, stdout, stderr) => {
-        if (error) console.log(error);
-        if (stdout) {
-            console.log("//====== stdout npm start Frontend =========//");
-            let timer2  = setTimeout(() => {
-                exec("chromium-browser --app=http://www.localhost:3000/ --kiosk");
-                clearTimeout(timer2)
-            }, 50000);
-        }
-        else if(stderr)
+async function frontendStart()
+{
+    setTimeout(async() => {
+        let {stdout} =  await exec("npm start", { cwd: "./Saps_Rasp_Pubnub" });
+        if(stdout)
         {
-            console.log("//===== Error in Starting Frontend EXEC ==========//")
-        } 
-        console.log("//======== inside exec =======//");
-    });
-}, 20000);
+            console.log("//============== Frontend Has Been Started ============//")
+            let timer2  = setTimeout(async() => {
+                            exec("chromium-browser --app=http://www.localhost:3000/ --kiosk",(err,stdout , stderr)=>{
+                                if(err)
+                                {
+                                    console.log("Error in Starting Chromium")
+                                    return;
+                                }
+                                console.log("//=========== Chromium Has been Started ==============//")
+                            });
+                            clearTimeout(timer2)
+                        }, 50000);
+        }
+    }, 20000);
+}
+frontendStart();
+
 
 
 
