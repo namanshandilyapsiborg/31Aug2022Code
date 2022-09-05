@@ -459,7 +459,7 @@ async function forceUpdater() {
 
 let scheduleJob;    
 
-function autoUpdateTimer() {
+async function autoUpdateTimer() {
  console.log("//====================== autoUpdateTimer() ======================  //")
  scheduleJob = schedule.scheduleJob('0 0 4 20 * *',()=>{
  console.log("//== scheduleJob inside autoUpdateTime ==//")
