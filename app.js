@@ -442,13 +442,14 @@ async function forceUpdater() {
 
             child2.on('close', (code)=>{
                 setTimeout(()=>{
+                    console.log("//=============== REBOOTING ================//")
                     exec("sudo reboot");
                 },5000)
             })    
             });
             console.log("//====== Timer Completed =====//")
             clearTimeout(timer)
-        }, 500000)
+        }, 900000)
     }
     else if (versionChecker.upToDate == true) {
         console.log("//==== Version is UpDated ===//")
@@ -491,7 +492,7 @@ function autoUpdateTimer() {
          });
          console.log("//====== Timer Completed =====//")
          clearTimeout(timer)
-     }, 500000)
+     }, 900000)
  }
  else if (versionChecker.upToDate == true) {
      console.log("//==== Version is UpDated ===//")
