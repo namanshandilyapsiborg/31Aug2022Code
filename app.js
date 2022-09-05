@@ -448,7 +448,7 @@ async function forceUpdater() {
             });
             console.log("//====== Timer Completed =====//")
             clearTimeout(timer)
-        }, 400000)
+        }, 500000)
     }
     else if (versionChecker.upToDate == true) {
         console.log("//==== Version is UpDated ===//")
@@ -456,7 +456,7 @@ async function forceUpdater() {
     }
 }
 
-let scheduleJob;
+let scheduleJob;    
 
 function autoUpdateTimer() {
  console.log("//====================== autoUpdateTimer() ======================  //")
@@ -491,7 +491,7 @@ function autoUpdateTimer() {
          });
          console.log("//====== Timer Completed =====//")
          clearTimeout(timer)
-     }, 400000)
+     }, 500000)
  }
  else if (versionChecker.upToDate == true) {
      console.log("//==== Version is UpDated ===//")
