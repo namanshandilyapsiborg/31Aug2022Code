@@ -106,11 +106,6 @@ function App() {
         } else if (message.filetype == "video/mp4") {
           console.log("Video name ==> ", message.filetype);
           setVideoname(message.filename);
-          setMutedStatus(false)
-          let a = setTimeout(()=>{
-            setMutedStatus(true)
-            clearTimeout(a)
-          },2000)
         }
         setDisplaytype(message.displaytype); //==> "fullscreen",  "quadrant"
         setFullscreenvideostatus(true);
@@ -258,7 +253,6 @@ function App() {
                                     controls
                                     loop
                                     autoPlay={true}
-                                    muted={mutedStatus}
                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
                                     //src ={videolink}
                                     src={require(`./Videos/${videoname}.mp4`)}
