@@ -113,11 +113,6 @@ pubnub.addListener({
         if (messageEvent.message.eventname == "stop") {
             PlayPauseVideo(messageEvent.message)
           }
-        //============================ To check before play ===============================//
-        if (messageEvent.message.eventname == "upload_check") 
-        {
-            uploadCheck    
-        }
         //=====================================================================//
         if (messageEvent.message.eventname == "update") {
             forceUpdater()
