@@ -53,17 +53,17 @@ function getChannel() {
     if (fs.existsSync("./realmacadd.json") && fs.existsSync("./frontendMac.json") ) {
         console.log("//=== macadress Channel exist ==//");
         let data = fs.readFileSync("./realmacadd.json", "utf-8");
-        console.log("MAC id inside mac address json file ==> ", JSON.parse(data));
+        //console.log("MAC id inside mac address json file ==> ", JSON.parse(data));
         let mcadd = JSON.parse(data);
         console.log("mcadd inside get_mac ===> ", mcadd[0].macaddress);
         //=================== For Frontend channel ==============================//
         let data1 = fs.readFileSync("./frontendMac.json", "utf-8");
         console.log("Frontend MAC id inside mac address json file ==> ", JSON.parse(data1));
         let mcadd1 = JSON.parse(data1);
-        console.log("mcadd inside get_mac ===> ", mcadd1[0].macaddress);
+        console.log("Frontend MAC ===> ", mcadd1[0].macaddress);
         //==================== Mac address to write to the device ======================//
         publishChannel = mcadd[0].macaddress
-        frontendChannel = mcadd1[0].macaddress
+        //frontendChannel = mcadd1[0].macaddress
         a.push(mcadd[0].macaddress);
         //a.push(mcadd1[0].macaddress)
 
