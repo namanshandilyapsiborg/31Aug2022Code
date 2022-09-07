@@ -136,12 +136,29 @@ pubnub.addListener({
 function PlayPauseVideo(data)
 {
     console.log("playPauseVideo func() ==> ", data)
-    // if (messageEvent.message.filetype == "image/jpeg") 
-    // {
-    //   console.log("Image name ==> ", message.filetype);
-    //   if(fs.existsSync(`./Saps_Rasp_Pubnub/src/Images/${messageEvent.message.filename}.jpg`))
-    //   {
-    //      console.log("//=== Yes Image exist ===//")
+    if (data && data.filetype == "image/jpeg") 
+    {
+      console.log("Image name ==> ", message.filetype);
+      if(fs.existsSync(`./Saps_Rasp_Pubnub/src/Images/${data.filename}.jpg`))
+      {
+         console.log("//=== Yes Image exist ===//")
+         pubnub.publish(
+          {
+              channel: frontendChannel,
+              message: messageEvent.message,
+          },
+          (status, response) => {
+              console.log("Status Pubnub ===> ", status);
+          }
+      );
+      }
+    }
+    if (data && data.filetype == "video/mp4") 
+    {
+      console.log("Video name ==> ", data.filename);
+      if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Videos/${data.filename}.mp4` )))
+      {
+         console.log("//=== Yes Image exist ===//")
     //      pubnub.publish(
     //       {
     //           channel: frontendChannel,
@@ -151,8 +168,8 @@ function PlayPauseVideo(data)
     //           console.log("Status Pubnub ===> ", status);
     //       }
     //   );
-    //   }
-    // }
+      }
+    }
     // if (messageEvent.message.eventname == "stop") {
     //     if(messageEvent.message.displaytype)
     //     {
