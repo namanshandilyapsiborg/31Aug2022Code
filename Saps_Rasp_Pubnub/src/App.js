@@ -259,12 +259,10 @@ function App() {
                                     }}
                                     controls
                                     loop
-                                    //autoPlay={true}
-                                    value={vidRef}
+                                    //value={vidRef}
                                     autoPlay={true}
-                                    muted={false}
+                                    //muted={false}
                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
-                                    //src ={videolink}
                                     src={require(`./Videos/${videoname}.mp4`)}
                                     type="video/mp4"
                                   ></video>
