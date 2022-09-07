@@ -83,6 +83,7 @@ pubnub.addListener({
             console.log("statusEvent ===> ", statusEvent.category);
         } else {
             console.log("//== Connection failed ===//");
+            pubnub.reconnect();
         }
     },
     category: function (e) {
@@ -138,8 +139,8 @@ function PlayPauseVideo(data)
     {
         if (data && data.filetype == "image/jpeg") 
         {
-          console.log("Image name ==> ", message.filetype);
-          if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Images/${data.filename}.jpg` ) ))
+          console.log("Image name ==> ", data.filename);
+          if(fs.existsSync(path.join(__dirname ,`/Saps_Rasp_Pubnub/src/Images/${data.filename}.jpg` )))
           {
              console.log("//=== Yes Image exist ===//")
              if(frontendChannel)
@@ -159,7 +160,7 @@ function PlayPauseVideo(data)
         if (data && data.filetype == "video/mp4") 
         {
           console.log("Video name ==> ", data.filename);
-          if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Videos/${data.filename}.mp4` )))
+          if(fs.existsSync(path.join(__dirname ,`/Saps_Rasp_Pubnub/src/Videos/${data.filename}.mp4` )))
           {
              console.log("//=== Yes Video exist ===//")
              if(frontendChannel)
