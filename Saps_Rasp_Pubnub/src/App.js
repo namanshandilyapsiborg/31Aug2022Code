@@ -57,6 +57,7 @@ function App() {
   const [videotag1, setVideotag1] = useState(null);
   const [videotag2, setVideotag2] = useState(null);
   const [videotag3, setVideotag3] = useState(null);
+  const [mutedStatus , setMutedStatus] = useState(false);
 
   const [online, setOnline] = useState(null);
   const [sensorval, setSensorval] = useState(true);
@@ -105,6 +106,11 @@ function App() {
         } else if (message.filetype == "video/mp4") {
           console.log("Video name ==> ", message.filetype);
           setVideoname(message.filename);
+          setMutedStatus(false)
+          let a = setTimeout(()=>{
+            setMutedStatus(true)
+            clearTimeout(a)
+          },2000)
         }
         setDisplaytype(message.displaytype); //==> "fullscreen",  "quadrant"
         setFullscreenvideostatus(true);
@@ -251,8 +257,8 @@ function App() {
                                     }}
                                     controls
                                     loop
-                                    autoPlay={"autoplay"}
-                                    muted={false}
+                                    autoPlay={true}
+                                    muted={mutedStatus}
                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
                                     //src ={videolink}
                                     src={require(`./Videos/${videoname}.mp4`)}
