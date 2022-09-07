@@ -113,7 +113,11 @@ pubnub.addListener({
         if (messageEvent.message.eventname == "stop") {
             PlayPauseVideo(messageEvent.message)
           }
-
+        //============================ To check before play ===============================//
+        if (messageEvent.message.eventname == "upload_check") 
+        {
+            uploadCheck    
+        }
         //=====================================================================//
         if (messageEvent.message.eventname == "update") {
             forceUpdater()
@@ -135,61 +139,64 @@ pubnub.addListener({
 function PlayPauseVideo(data)
 {
     console.log("playPauseVideo func() ==> ", data)
-    if (data && data.filetype == "image/jpeg") 
+    if(data.eventname == "play")
     {
-      console.log("Image name ==> ", message.filetype);
-      if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Images/${data.filename}.jpg` ) ))
-      {
-         console.log("//=== Yes Image exist ===//")
-         if(frontendChannel)
-         {
-            pubnub.publish(
-                {
-                    channel: frontendChannel,
-                    message: data,
-                },
-                (status, response) => {
-                    console.log("Status Pubnub ===> ", status);
-                }
-            );
-         }
-      }
+        if (data && data.filetype == "image/jpeg") 
+        {
+          console.log("Image name ==> ", message.filetype);
+          if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Images/${data.filename}.jpg` ) ))
+          {
+             console.log("//=== Yes Image exist ===//")
+             if(frontendChannel)
+             {
+                pubnub.publish(
+                    {
+                        channel: frontendChannel,
+                        message: data,
+                    },
+                    (status, response) => {
+                        console.log("Status Pubnub ===> ", status);
+                    }
+                );
+             }
+          }
+        }
+        if (data && data.filetype == "video/mp4") 
+        {
+          console.log("Video name ==> ", data.filename);
+          if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Videos/${data.filename}.mp4` )))
+          {
+             console.log("//=== Yes Video exist ===//")
+             if(frontendChannel)
+             {
+                pubnub.publish(
+                    {
+                        channel: frontendChannel,
+                        message: data,
+                    },
+                    (status, response) => {
+                        console.log("Status Pubnub ===> ", status);
+                    }
+                );
+             }
+          }
+        }
     }
-    if (data && data.filetype == "video/mp4") 
+    else if(data.eventname == "stop")
     {
-      console.log("Video name ==> ", data.filename);
-      if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Videos/${data.filename}.mp4` )))
-      {
-         console.log("//=== Yes Video exist ===//")
-         if(frontendChannel)
-         {
-            pubnub.publish(
-                {
-                    channel: frontendChannel,
-                    message: data,
-                },
-                (status, response) => {
-                    console.log("Status Pubnub ===> ", status);
-                }
-            );
-         }
-      }
+        if(frontendChannel)
+        {
+           pubnub.publish(
+               {
+                   channel: frontendChannel,
+                   message: data,
+               },
+               (status, response) => {
+                   console.log("Status Pubnub ===> ", status);
+               }
+           );
+        }
     }
-    // if (messageEvent.message.eventname == "stop") {
-    //     if(messageEvent.message.displaytype)
-    //     {
-    //         //=====================> Publish to Frontend ===========>
-    //         pubnub.publish(
-    //             {
-    //                 channel: frontendChannel,
-    //                 message: messageEvent.message,
-    //             },
-    //             (status, response) => {
-    //                 console.log("Status Pubnub ===> ", status);
-    //             }
-    //         );
-    //     }
-    // }
 }
 
 
@@ -198,48 +205,51 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
     console.log("Inside DownloadVideoZip ==> ", fileurl);
     if (fileurl && zipname && filetype) {
         const file = fileurl;
-
+        //===> for video download ====>
         if (filetype == "video/mp4") {
             console.log(" //=== Video/mp4 ======//");
-            const filePath = `${__dirname}/zippedfiles`;
+            //====> first check if video already downloaded
+            if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Videos/${zipname}.mp4`)))
+            {
+                console.log("//=== File already exist =======//")
+                return ;
+            }
+            else{
+                const filePath = `${__dirname}/zippedfiles`;
 
-            download(file, filePath).then(() => {
-                console.log("//==   Video Download Completed   ==//");
-
-                //============ Now unzip the file ==================//
-                console.log("Inside Zip file name ==>", zipname);
-                const path = `./zippedfiles/${zipname}.zip`;
-                console.log("path ==>", path);
-
-                fs.createReadStream(path).pipe(
-                    unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
-                );
-                //  else if (filetype == "image/jpeg") {
-                //   console.log(" //=== image/jpeg ======//");
-                //   fs.createReadStream(path).pipe(
-                //     unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Images" })
-                //   );
-                // } else if (filetype == "image/png") {
-                //   console.log(" //=== image/png ======//");
-                //   fs.createReadStream(path).pipe(
-                //     unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Pngimages" })
-                //   );
-                // }
-                setTimeout(() => {
-                    fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
-                        console.log("deleted");
-                    });
-                }, 1000);
-            });
+                download(file, filePath).then(() => {
+                    console.log("//==   Video Download Completed   ==//");
+    
+                    //============ Now unzip the file ==================//
+                    console.log("Inside Zip file name ==>", zipname);
+                    const path = `./zippedfiles/${zipname}.zip`;
+                    console.log("path ==>", path);
+    
+                    fs.createReadStream(path).pipe(
+                        unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
+                    );
+                    setTimeout(() => {
+                        fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
+                            console.log("deleted");
+                        });
+                    }, 1000);
+                });
+            }            
         } else if (filetype == "image/jpeg") {
-            console.log("//========== Image type url ==============//");
-            const file = fileurl;
-            console.log("Image file url ==> ", fileurl);
-            //const filePath = `${__dirname}/zippedfiles`;
-            const filePath = `${__dirname}/Saps_Rasp_Pubnub/src/Images`;
-            download(file, filePath).then(() => {
-                console.log("//==  Image Download Completed   ==//");
-            });
+            if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Images/${zipname}.jpg`)))
+            {
+                console.log("//=== File already exist =======//")
+                return ;
+            }
+            else{
+                const file = fileurl;
+                console.log("Image file url ==> ", fileurl);
+                //const filePath = `${__dirname}/zippedfiles`;
+                const filePath = `${__dirname}/Saps_Rasp_Pubnub/src/Images`;
+                download(file, filePath).then(() => {
+                    console.log("//==  Image Download Completed   ==//");
+                });
+            }
         }
     }
 }
