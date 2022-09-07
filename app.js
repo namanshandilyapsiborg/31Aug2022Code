@@ -65,7 +65,7 @@ function getChannel() {
         publishChannel = mcadd[0].macaddress
         frontendChannel = mcadd1[0].macaddress
         a.push(mcadd[0].macaddress);
-        a.push(mcadd1[0].macaddress)
+        //a.push(mcadd1[0].macaddress)
 
         pubnub.subscribe({
             channels: a,
