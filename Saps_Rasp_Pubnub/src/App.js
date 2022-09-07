@@ -72,7 +72,11 @@ function App() {
         setOnline(false);
       }
     }, 10000);
-    vidRef.current.play();
+    if(filetype)
+    {
+      vidRef.current.play();
+    }
+    
 
   }, [filetype]);
 
