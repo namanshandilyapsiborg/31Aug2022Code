@@ -58,7 +58,6 @@ function getChannel() {
         console.log("mcadd inside get_mac ===> ", mcadd[0].macaddress);
         //=================== For Frontend channel ==============================//
         let data1 = fs.readFileSync("./frontendMac.json", "utf-8");
-        console.log("Frontend MAC id inside mac address json file ==> ", JSON.parse(data1));
         let mcadd1 = JSON.parse(data1);
         console.log("Frontend MAC ===> ", mcadd1[0].macaddress);
         //==================== Mac address to write to the device ======================//
@@ -139,18 +138,21 @@ function PlayPauseVideo(data)
     if (data && data.filetype == "image/jpeg") 
     {
       console.log("Image name ==> ", message.filetype);
-      if(fs.existsSync(`./Saps_Rasp_Pubnub/src/Images/${data.filename}.jpg`))
+      if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Images/${data.filename}.jpg` ) ))
       {
          console.log("//=== Yes Image exist ===//")
-         pubnub.publish(
-          {
-              channel: frontendChannel,
-              message: messageEvent.message,
-          },
-          (status, response) => {
-              console.log("Status Pubnub ===> ", status);
-          }
-      );
+         if(frontendChannel)
+         {
+            pubnub.publish(
+                {
+                    channel: frontendChannel,
+                    message: data,
+                },
+                (status, response) => {
+                    console.log("Status Pubnub ===> ", status);
+                }
+            );
+         }
       }
     }
     if (data && data.filetype == "video/mp4") 
@@ -158,16 +160,19 @@ function PlayPauseVideo(data)
       console.log("Video name ==> ", data.filename);
       if(fs.existsSync(path.join(__dirname ,`./Saps_Rasp_Pubnub/src/Videos/${data.filename}.mp4` )))
       {
-         console.log("//=== Yes Image exist ===//")
-    //      pubnub.publish(
-    //       {
-    //           channel: frontendChannel,
-    //           message: messageEvent.message,
-    //       },
-    //       (status, response) => {
-    //           console.log("Status Pubnub ===> ", status);
-    //       }
-    //   );
+         console.log("//=== Yes Video exist ===//")
+         if(frontendChannel)
+         {
+            pubnub.publish(
+                {
+                    channel: frontendChannel,
+                    message: data,
+                },
+                (status, response) => {
+                    console.log("Status Pubnub ===> ", status);
+                }
+            );
+         }
       }
     }
     // if (messageEvent.message.eventname == "stop") {
