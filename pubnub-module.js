@@ -6,6 +6,9 @@ const pubnub = new PubNub({
   subscribeKey: "sub-c-6c7df15a-c787-11ec-8c08-82b465a2b170",
   uuid: uuid,
   restore: true,
+  presenceTimeout: 20,
+  autoNetworkDetection : true,
+  userId: uuid,
 });
 
 module.exports = { pubnub };

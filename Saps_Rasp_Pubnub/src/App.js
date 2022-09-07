@@ -251,8 +251,8 @@ function App() {
                                     }}
                                     controls
                                     loop
+                                    autoPlay
                                     muted={false}
-                                    autoPlay={true}
                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
                                     //src ={videolink}
                                     src={require(`./Videos/${videoname}.mp4`)}
