@@ -556,7 +556,7 @@ async function forceUpdater() {
             });
             console.log("//====== Timer Completed =====//")
             clearTimeout(timer)
-        }, 5*60000)
+        }, 5*60000)    ///===> timer for reboot ==>  5 min
     }
     else if (versionChecker.upToDate == true) {
         console.log("//==== Version is UpDated ===//")
