@@ -45,19 +45,28 @@ const { ReadlineParser } = require("@serialport/parser-readline");
 //   channels: a,
 // });
 let publishChannel;
+let frontendChannel ; 
 let a = [];
 
 //========================= Getting MAcID ======================//
 function getChannel() {
-    if (fs.existsSync("./realmacadd.json")) {
+    if (fs.existsSync("./realmacadd.json") && fs.existsSync("./frontendMac.json") ) {
         console.log("//=== macadress Channel exist ==//");
         let data = fs.readFileSync("./realmacadd.json", "utf-8");
         console.log("MAC id inside mac address json file ==> ", JSON.parse(data));
         let mcadd = JSON.parse(data);
         console.log("mcadd inside get_mac ===> ", mcadd[0].macaddress);
+        //=================== For Frontend channel ==============================//
+        let data1 = fs.readFileSync("./frontendMac.json", "utf-8");
+        console.log("Frontend MAC id inside mac address json file ==> ", JSON.parse(data1));
+        let mcadd1 = JSON.parse(data1);
+        console.log("mcadd inside get_mac ===> ", mcadd1[0].macaddress);
         //==================== Mac address to write to the device ======================//
         publishChannel = mcadd[0].macaddress
+        frontendChannel = mcadd1[0].macaddress
         a.push(mcadd[0].macaddress);
+        a.push(mcadd1[0].macaddress)
+
         pubnub.subscribe({
             channels: a,
         });
@@ -99,7 +108,64 @@ pubnub.addListener({
                 messageEvent.message.filetype
             );
         }
+        //============================= Play/Pause ===========================================//
+        if (messageEvent.message.eventname == "play") 
+        {
+            if (messageEvent.message.filename && messageEvent.message.filetype) 
+            {
+              if (messageEvent.message.filetype == "image/jpeg") 
+              {
+                console.log("Image name ==> ", message.filetype);
+                if(fs.existsSync(`./Saps_Rasp_Pubnub/src/Images/${messageEvent.message.filename}.jpg`))
+                {
+                   console.log("//=== Yes Image exist ===//")
+                   pubnub.publish(
+                    {
+                        channel: frontendChannel,
+                        message: messageEvent.message,
+                    },
+                    (status, response) => {
+                        console.log("Status Pubnub ===> ", status);
+                    }
+                );
+                }
+            }
+            else if(message.filetype == "video/mp4")
+            {
+                if(fs.existsSync(`./Saps_Rasp_Pubnub/src/Videos/${messageEvent.message.filename}.mp4`))
+                {
+                   console.log("//=== Yes Video exist ===//")
+                   pubnub.publish(
+                    {
+                        channel: frontendChannel,
+                        message: messageEvent.message,
+                    },
+                    (status, response) => {
+                        console.log("Status Pubnub ===> ", status);
+                    }
+                );
+                }
+            }
+            }
+        }   //=================== to stop the video =======>
+            else if (messageEvent.message.eventname == "stop") {
+            if(messageEvent.message.displaytype)
+            {
+                //=====================> Publish to Frontend ===========>
+                pubnub.publish(
+                    {
+                        channel: frontendChannel,
+                        message: messageEvent.message,
+                    },
+                    (status, response) => {
+                        console.log("Status Pubnub ===> ", status);
+                    }
+                );
+            }
+          }
+        
 
+        //=====================================================================//
         if (messageEvent.message.eventname == "update") {
             forceUpdater()
         }
@@ -410,13 +476,22 @@ parser.on("data", (data) => {
         let realmcadd = [];
         jsonVariable = { macaddress: mcadd };
         realmcadd.push(jsonVariable);
+
+        let mcaddFrontend = [];       //===> For 
+        jsonVariable1= {macaddress : mcadd.concat("FrontEnd")}
+        mcaddFrontend.push(jsonVariable1)
+
         //========== Generating JSON file with Mac addr BAse 64 Encoded  ======//
         fs.writeFileSync("./realmacadd.json", JSON.stringify(realmcadd), "utf-8");
+
+        fs.writeFileSync("./frontendMac.json", JSON.stringify(mcaddFrontend), "utf-8");
+
         fs.writeFileSync(
             "./Saps_Rasp_Pubnub/src/macadd.json",
-            JSON.stringify(realmcadd),
+            JSON.stringify(mcaddFrontend),
             "utf-8"
         );
+        
 
         //============= Generating QRCode =================================//
         var qr_code = qr.image(mcadd, { type: "png" });
