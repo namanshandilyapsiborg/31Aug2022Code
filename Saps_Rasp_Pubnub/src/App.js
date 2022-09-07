@@ -250,7 +250,6 @@ function App() {
                                       minWidth: "100%",
                                     }}
                                     controls
-                                    muted
                                     loop
                                     autoPlay={true}
                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
