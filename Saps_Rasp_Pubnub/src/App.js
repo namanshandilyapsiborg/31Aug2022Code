@@ -2,7 +2,7 @@ import Display1screen from "./components/Displays/Display1screen";
 import Display2screens from "./components/Displays/Display2screens";
 import Display4screens from "./components/Displays/Display4screens";
 import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
+import { useEffect, useState , useRef } from "react";
 import { VideoContext } from "./Context/VideoContext";
 import qrcode from "./Images/qrcode.png";
 import navbaricon from "./Images/navbaricon.png";
@@ -62,6 +62,7 @@ function App() {
   const [online, setOnline] = useState(null);
   const [sensorval, setSensorval] = useState(true);
   const [playmode, setPlaymode] = useState(false);
+  const vidRef = useRef();
 
   useEffect(() => {
     setInterval(() => {
@@ -71,7 +72,9 @@ function App() {
         setOnline(false);
       }
     }, 10000);
-  }, []);
+    vidRef.current.play();
+
+  }, [filetype]);
 
   useEffect(() => {
     if (channels.length > 0) {
@@ -252,7 +255,10 @@ function App() {
                                     }}
                                     controls
                                     loop
-                                    autoPlay={true}
+                                    //autoPlay={true}
+                                    value={vidRef}
+                                    play={true}
+                                    muted={false}
                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
                                     //src ={videolink}
                                     src={require(`./Videos/${videoname}.mp4`)}
