@@ -9,12 +9,13 @@ import navbaricon from "./Images/navbaricon.png";
 // import SapsPurple from "./Images/SapsPurple.jpg";
 import SapsPurple from "./Images/PostMyAddLogo.png";
 import { FETCH_URL } from "./fetchIp";
-//import macadd from "./macadd.json";
+import macadd from "./macadd.json";
 import { Typography } from "@mui/material";
 //============================== PUBNUB Initialization ===================================//
 import PubNub from "pubnub";
+import ReactPlayer from "react-player/youtube";
 import { PubNubProvider, usePubNub } from "pubnub-react";
-let macadd = "1234"
+//let macadd = "1234"
 const pubnub = new PubNub({
   publishKey: "pub-c-ee8d5114-572e-40bd-bb92-6b00b09fc202",
   subscribeKey: "sub-c-6c7df15a-c787-11ec-8c08-82b465a2b170",
@@ -108,6 +109,10 @@ function App() {
           console.log("Video name ==> ", message.filetype);
           setVideoname(message.filename);
         }
+        else if (message.filetype == "url") {
+          console.log("Video link ==> ", message.filetype);
+          setVideoname(message.filename);
+        }
         setDisplaytype(message.displaytype); //==> "fullscreen",  "quadrant"
         setFullscreenvideostatus(true);
         setFiletype(message.filetype);
@@ -195,6 +200,7 @@ function App() {
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
+                    overflow : "hidden"
                   }}
                 >
                   <img
@@ -281,7 +287,18 @@ function App() {
                                 <div>hello</div>
                               )}
 
-                              
+                              {filetype && filetype == "url" ? (
+                               <ReactPlayer
+                               playing
+                               //url="https://www.youtube.com/watch?v=668nUCeBHyY"
+                               url={videoname ? videoname : null}
+                               muted={true}
+                               autoplay={true}
+                               loop={true}
+                             />
+                              ) : (
+                                <div>hello</div>
+                              )}
 
                               {/* <video
                           style={{
