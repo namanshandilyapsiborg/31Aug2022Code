@@ -193,21 +193,6 @@ function PlayPauseVideo(data)
                 );
              }
         }
-        if (data && data.filetype == "updating") 
-        {
-             if(frontendChannel)
-             {
-                pubnub.publish(
-                    {
-                        channel: frontendChannel,
-                        message: data,
-                    },
-                    (status, response) => {
-                        console.log("Status Pubnub ===> ", status);
-                    }
-                );
-             }
-        }
     }
     else if(data.eventname == "stop")
     {
@@ -223,6 +208,21 @@ function PlayPauseVideo(data)
                }
            );
         }
+    }
+    else if (data && data.filetype == "updating") 
+    {
+         if(frontendChannel)
+         {
+            pubnub.publish(
+                {
+                    channel: frontendChannel,
+                    message: data,
+                },
+                (status, response) => {
+                    console.log("Status Pubnub ===> ", status);
+                }
+            );
+         }
     }
 }
 
