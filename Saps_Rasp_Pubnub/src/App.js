@@ -224,7 +224,8 @@ function App() {
               </>
             ) : (
               <>
-                {displaytype != null ? (
+                {
+                displaytype != null ? (
                   <>
                     {displaytype == "fullscreen" && fullscreenvideostatus && (
                       // <Display1screen
@@ -296,6 +297,39 @@ function App() {
                                autoplay={true}
                                loop={true}
                              />
+                              )}
+
+                              {/* ==================== For Loading ============== */}
+                              {filetype && filetype == "updating" && (
+                               <>
+                               <div
+                                 style={{
+                                   height: "100vh",
+                                   width: "100%",
+                                   color: "white",
+                                   backgroundColor: "black",
+                                   fontSize: "2rem",
+                                   display: "flex",
+                                   flexDirection: "column",
+                                   justifyContent: "center",
+                                   alignItems: "center",
+                                 }}
+                               >
+                                 <img
+                                   style={{
+                                     width: "1400px",
+                                     height: "400px",
+                                     marginBottom: "5px",
+                                     backgroundSize: "cover",
+                                     backgroundPosition: "center",
+                                     backgroundRepeat: "no-repeat",
+                                     borderRadius: "10px",
+                                   }}
+                                   src={SapsPurple}
+                                 />
+                                 <h1>UPDATING...</h1>
+                               </div>{" "}
+                             </>
                               )}
 
                               {/* <video
