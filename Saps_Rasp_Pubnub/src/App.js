@@ -270,7 +270,7 @@ function App() {
                                 </>
                               )}
 
-                              {filetype && filetype == "image/jpeg" ? (
+                              {filetype && filetype == "image/jpeg" && (
                                 <img
                                   style={{
                                     objectFit: "cover",
@@ -283,8 +283,6 @@ function App() {
                                   // src={SapsPurple}
                                   src={require(`./Images/${imagename}.jpg`)}
                                 />
-                              ) : (
-                                <div>hello</div>
                               )}
 
                               {filetype && filetype == "url" && (
