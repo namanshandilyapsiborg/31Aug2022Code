@@ -177,6 +177,22 @@ function PlayPauseVideo(data)
              }
           }
         }
+        if (data && data.filetype == "url") 
+        {
+          console.log("Video link ==> ", data.filename);
+             if(frontendChannel)
+             {
+                pubnub.publish(
+                    {
+                        channel: frontendChannel,
+                        message: data,
+                    },
+                    (status, response) => {
+                        console.log("Status Pubnub ===> ", status);
+                    }
+                );
+             }
+        }
     }
     else if(data.eventname == "stop")
     {
