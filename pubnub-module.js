@@ -9,8 +9,7 @@ const pubnub = new PubNub({
   presenceTimeout: 20,
   autoNetworkDetection : true,
   userId: uuid,
-  keepAlive : true,
-  autoNetworkDetection : true
+  //keepAlive : true,
 });
 
 module.exports = { pubnub };

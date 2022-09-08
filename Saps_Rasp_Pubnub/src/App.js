@@ -9,12 +9,12 @@ import navbaricon from "./Images/navbaricon.png";
 // import SapsPurple from "./Images/SapsPurple.jpg";
 import SapsPurple from "./Images/PostMyAddLogo.png";
 import { FETCH_URL } from "./fetchIp";
-import macadd from "./macadd.json";
+//import macadd from "./macadd.json";
 import { Typography } from "@mui/material";
 //============================== PUBNUB Initialization ===================================//
 import PubNub from "pubnub";
 import { PubNubProvider, usePubNub } from "pubnub-react";
-
+let macadd = "1234"
 const pubnub = new PubNub({
   publishKey: "pub-c-ee8d5114-572e-40bd-bb92-6b00b09fc202",
   subscribeKey: "sub-c-6c7df15a-c787-11ec-8c08-82b465a2b170",
@@ -72,12 +72,6 @@ function App() {
         setOnline(false);
       }
     }, 10000);
-    if(filetype)
-    {
-      vidRef.current.play();
-    }
-    
-
   }, [filetype]);
 
   useEffect(() => {
@@ -260,7 +254,8 @@ function App() {
                                     controls
                                     loop
                                     //value={vidRef}
-                                    autoPlay={true}
+                                    autoPlay
+                                    muted={true}
                                     //muted={false}
                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
                                     src={require(`./Videos/${videoname}.mp4`)}
@@ -285,6 +280,8 @@ function App() {
                               ) : (
                                 <div>hello</div>
                               )}
+
+                              
 
                               {/* <video
                           style={{
@@ -312,7 +309,7 @@ function App() {
                                 width: "100%",
                                 color: "white",
                                 backgroundColor: "black",
-                                fontSize: "0.8rem",
+                                fontSize: "1.2rem",
                                 display: "flex",
                                 flexDirection: "column",
                                 justifyContent: "center",
@@ -321,8 +318,8 @@ function App() {
                             >
                               <img
                                 style={{
-                                  width: "700px",
-                                  height: "250px",
+                                  width: "1400px",
+                                  height: "400px",
                                   marginBottom: "5px",
                                   backgroundSize: "cover",
                                   backgroundPosition: "center",
@@ -363,7 +360,7 @@ function App() {
                         width: "100%",
                         color: "white",
                         backgroundColor: "black",
-                        fontSize: "0.8rem",
+                        fontSize: "1.2rem",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
@@ -372,8 +369,8 @@ function App() {
                     >
                       <img
                         style={{
-                          width: "700px",
-                          height: "250px",
+                          width: "1400px",
+                          height: "400px",
                           marginBottom: "5px",
                           backgroundSize: "cover",
                           backgroundPosition: "center",
