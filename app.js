@@ -305,7 +305,8 @@ async function frontendStart()
         {
             console.log("//============== Frontend Has Been Started ============//")
             let timer2  = setTimeout(async() => {
-                            exec("chromium-browser --app=http://www.localhost:3000/ --kiosk",(err,stdout , stderr)=>{
+                           // exec("chromium-browser --app=http://www.localhost:3000/ --kiosk",(err,stdout , stderr)=>{
+                            exec("firefox --kiosk http://www.localhost:3000/",(err,stdout , stderr)=>{
                                 if(err)
                                 {
                                     console.log("Error in Starting Chromium")
