@@ -615,7 +615,7 @@ async function autoUpdateTimer() {
          });
          console.log("//====== Timer Completed =====//")
          clearTimeout(timer)
-     }, 900000)
+     }, 300000)
  }
  else if (versionChecker.upToDate == true) {
      console.log("//==== Version is UpDated ===//")
