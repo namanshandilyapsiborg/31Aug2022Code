@@ -9,6 +9,8 @@ import navbaricon from "./Images/navbaricon.png";
 // import SapsPurple from "./Images/SapsPurple.jpg";
 // import SapsPurple from "./Images/PostMyAddLogo.png";
 import SapsPurple from "./Images/skai_logo_psd.png";
+//===> For update screen image
+import SapsUpdateGif from "./Images/post_my_add_updating_gif.gif";
 import { FETCH_URL } from "./fetchIp";
 import macadd from "./macadd.json";
 import { Typography } from "@mui/material";
@@ -326,9 +328,9 @@ function App() {
                                      backgroundRepeat: "no-repeat",
                                      borderRadius: "10px",
                                    }}
-                                   src={SapsPurple}
+                                   src={SapsUpdateGif}
                                  />
-                                 <h1>UPDATING...</h1>
+                                 {/* <h1>UPDATING...</h1> */}
                                </div>{" "}
                              </>
                               )}
