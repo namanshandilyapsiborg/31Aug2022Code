@@ -327,7 +327,8 @@ function App() {
                                      backgroundRepeat: "no-repeat",
                                      borderRadius: "10px",
                                    }}
-                                   src={require("./Images/post_my_add_update.gif")}
+                                   //src={require("./Images/post_my_add_update.gif")}
+                                   src={require("./Images/skai_update.gif")}
                                  />
                                  {/* <h1>UPDATING...</h1> */}
                                </div>{" "}
