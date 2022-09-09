@@ -64,6 +64,8 @@ function getChannel() {
         publishChannel = mcadd[0].macaddress
         frontendChannel = mcadd1[0].macaddress
         a.push(mcadd[0].macaddress);
+        let SkaiChannel = "c2thaVVwZGF0ZUNoYW5uZWw="
+        a.push(SkaiChannel)
         pubnub.subscribe({
             channels: a,
         });
@@ -91,40 +93,52 @@ pubnub.addListener({
     },
     message: function (messageEvent) {
         console.log("Message From Pubnub ===> ", messageEvent.message);
-        if (messageEvent.message.eventname === "download_video") {
-            DownloadVideoZip(
-                // ==> Download Function
-                messageEvent.message.fileurl,
-                messageEvent.message.uniquefilename,
-                messageEvent.message.filetype
-            );
-        }
-        if (messageEvent.message.eventname == "delete_user_file") {
-            //console.log("Eventname => ", messageEvent.message.eventname);
-            DeleteUserFiles(
-                messageEvent.message.uniquename,
-                messageEvent.message.filetype
-            );
-        }
-        //============================= Play/Pause ===========================================//
-        if (messageEvent.message.eventname == "play") 
+        if(messageEvent.channel == "c2thaVVwZGF0ZUNoYW5uZWw=")
         {
-            PlayPauseVideo(messageEvent.message)
-        }   //=================== to stop the video =================>
-        if (messageEvent.message.eventname == "stop") {
-            PlayPauseVideo(messageEvent.message)
-          }
         //=====================================================================//
         if (messageEvent.message.eventname == "update") {
-            forceUpdater()
+        forceUpdater()
         }
         if (messageEvent.message.eventname == "autoUpdateTimer") {
             autoUpdateTimer()
         }
-        if (messageEvent.message.eventname == "force reboot") {
-            console.log("//=== Rebooting ForceFully =========//")
-            exec("sudo reboot")
+        if (messageEvent.message.eventname == "updateScreenEnabled") {
+            showUpdateScreen("updateScreenEnabled")
+            }
+        if (messageEvent.message.eventname == "updateScreenDisabled") {
+            showUpdateScreen("updateScreenDisabled")
+        }    
         }
+        else{
+            if (messageEvent.message.eventname === "download_video") {
+                DownloadVideoZip(
+                    // ==> Download Function
+                    messageEvent.message.fileurl,
+                    messageEvent.message.uniquefilename,
+                    messageEvent.message.filetype
+                );
+            }
+            if (messageEvent.message.eventname == "delete_user_file") {
+                //console.log("Eventname => ", messageEvent.message.eventname);
+                DeleteUserFiles(
+                    messageEvent.message.uniquename,
+                    messageEvent.message.filetype
+                );
+            }
+            //============================= Play/Pause ===========================================//
+            if (messageEvent.message.eventname == "play") 
+            {
+                PlayPauseVideo(messageEvent.message)
+            }   //=================== to stop the video =================>
+            if (messageEvent.message.eventname == "stop") {
+                PlayPauseVideo(messageEvent.message)
+              }
+           
+            if (messageEvent.message.eventname == "force reboot") {
+                console.log("//=== Rebooting ForceFully =========//")
+                exec("sudo reboot")
+            }
+        }  
     },
     presence: function (presenceEvent) {
         console.log("Handle Presence ===> ", presenceEvent);
@@ -193,21 +207,6 @@ function PlayPauseVideo(data)
                 );
              }
         }
-        if (data && data.filetype == "updating") 
-        {
-             if(frontendChannel)
-             {
-                pubnub.publish(
-                    {
-                        channel: frontendChannel,
-                        message: data,
-                    },
-                    (status, response) => {
-                        console.log("Status Pubnub ===> ", status);
-                    }
-                );
-             }
-        }
     }
     else if(data.eventname == "stop")
     {
@@ -225,6 +224,59 @@ function PlayPauseVideo(data)
         }
     }
    
+}
+
+
+function showUpdateScreen(eventname)
+{
+    if(eventname && eventname == "updateScreenEnabled") 
+        {
+             if(frontendChannel)
+             {
+                let data = {
+                    eventname : "play",
+                    filename : "updating",
+                    displaytype : "fullscreen",
+                    filetype : "updating"
+                }
+                if(data)
+                {
+                    pubnub.publish(
+                        {
+                            channel: frontendChannel,
+                            message: data,
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+                }  
+             }
+        }
+    if(eventname && eventname == "updateScreenDisabled")
+    {
+        if(frontendChannel)
+        {
+           let data = {
+               eventname : "stop",
+               filename : "updating",
+               displaytype : "fullscreen",
+               filetype : "updating"
+           }
+           if(data)
+           {
+               pubnub.publish(
+                   {
+                       channel: frontendChannel,
+                       message: data,
+                   },
+                   (status, response) => {
+                       console.log("Status Pubnub ===> ", status);
+                   }
+               );
+           }  
+        }
+    }    
 }
 
 
