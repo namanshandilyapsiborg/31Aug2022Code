@@ -319,8 +319,8 @@ function App() {
                                >
                                  <img
                                    style={{
-                                     width: "1400px",
-                                     height: "400px",
+                                     width: "100%",
+                                     height: "100vh",
                                      marginBottom: "5px",
                                      backgroundSize: "cover",
                                      backgroundPosition: "center",
