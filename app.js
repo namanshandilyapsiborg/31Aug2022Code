@@ -714,7 +714,7 @@ async function forceUpdater() {
                 cwd: './'
             })
 
-            child.on('close', (code) => {                 //--> after build run the frontend
+            child.on('close', (code) => {               
                 console.log(`child process exited with code ${code}`);
             let child2 = spawn('npm i', {
                     stdio: 'inherit',
