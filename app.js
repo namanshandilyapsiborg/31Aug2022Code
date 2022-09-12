@@ -110,6 +110,10 @@ pubnub.addListener({
         if (messageEvent.message.eventname == "updateScreenDisabled") {
             showUpdateScreen("updateScreenDisabled")
         }    
+        if (messageEvent.message.eventname == "force reboot") {
+            console.log("//=== Rebooting ForceFully =========//")
+            exec("sudo reboot")
+        }
         }
         else{
             if (messageEvent.message.eventname === "download_video") {
