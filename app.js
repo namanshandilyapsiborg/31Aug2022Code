@@ -723,6 +723,7 @@ async function forceUpdater() {
                 })
 
             child2.on('close', (code)=>{
+                exec("pkill -f firefox")
                 setTimeout(()=>{
                     console.log("//=============== REBOOTING ================//")
                     exec("sudo reboot");
@@ -767,6 +768,7 @@ async function autoUpdateTimer() {
              })
 
          child2.on('close', (code)=>{
+            exec("pkill -f firefox")
              setTimeout(()=>{
                  exec("sudo reboot");
              },5000)
