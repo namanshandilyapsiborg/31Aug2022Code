@@ -451,33 +451,48 @@ async function frontendStart()
         if(stdout)
         {
             console.log("//============== Frontend Has Been Started ============//")
-            let timer2  = setTimeout(async() => {
+                let timer2  = setTimeout(async() => {
                            // exec("chromium-browser --app=http://www.localhost:3000/ --kiosk",(err,stdout , stderr)=>{
-                            exec("firefox --kiosk http://www.localhost:3000/",(err,stdout , stderr)=>{
-                                if(err)
-                                {
-                                    console.log("Error in Starting Chromium")
-                                    return;
-                                }
-                                console.log("//=========== Chromium Has been Started ==============//")
-                                let timer2 = setTimeout(()=>{
-                                    pubnub.publish(
-                                        {
-                                            channel: masterChannel,
-                                            message: {
-                                                mac_id :  publishChannel,
-                                                eventname : "Rebooted",
-                                            },
-                                        },
-                                        (status, response) => {
-                                            console.log("Status Pubnub ===> ", status);
-                                        }
-                                    );
-                                    clearTimeout(timer2)
-                                },10000)
-                            });
+                        let {stdout} = exec("firefox http://www.localhost:3000")
+                        if(stdout)
+                        {
+                            console.log("//========= fireFox has been started =========//")
+                            let {stdout} = exec("xdotool search --sync --onlyvisible --name firefox key F11")
+                            if(stdout)
+                            {
+                                console.log("//========= F11 Command has been executed ====//")
+                            }
+                        }
                             clearTimeout(timer2)
                         }, 50000);
+
+            // let timer2  = setTimeout(async() => {
+            //                // exec("chromium-browser --app=http://www.localhost:3000/ --kiosk",(err,stdout , stderr)=>{
+            //                 exec("firefox --kiosk http://www.localhost:3000/",(err,stdout , stderr)=>{
+            //                     if(err)
+            //                     {
+            //                         console.log("Error in Starting Chromium")
+            //                         return;
+            //                     }
+            //                     console.log("//=========== Chromium Has been Started ==============//")
+            //                     let timer2 = setTimeout(()=>{
+            //                         pubnub.publish(
+            //                             {
+            //                                 channel: masterChannel,
+            //                                 message: {
+            //                                     mac_id :  publishChannel,
+            //                                     eventname : "Rebooted",
+            //                                 },
+            //                             },
+            //                             (status, response) => {
+            //                                 console.log("Status Pubnub ===> ", status);
+            //                             }
+            //                         );
+            //                         clearTimeout(timer2)
+            //                     },10000)
+            //                 });
+            //                 clearTimeout(timer2)
+            //             }, 50000);
         }
     }, 20000);
 }
