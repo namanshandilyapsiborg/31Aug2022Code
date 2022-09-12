@@ -453,15 +453,19 @@ async function frontendStart()
             console.log("//============== Frontend Has Been Started ============//")
                 let timer2  = setTimeout(async() => {
                            // exec("chromium-browser --app=http://www.localhost:3000/ --kiosk",(err,stdout , stderr)=>{
-                        let {stdout} = exec("firefox http://www.localhost:3000")
+                        let {stdout} = exec("firefox http://www.localhost:3000 --kiosk")
                         if(stdout)
                         {
                             console.log("//========= fireFox has been started =========//")
-                            let {stdout} = exec("xdotool search --sync --onlyvisible --name firefox key F11")
-                            if(stdout)
-                            {
-                                console.log("//========= F11 Command has been executed ====//")
-                            }
+                            let timer3 = setTimeout(()=>{
+                                let {stdout} = exec("xdotool search --sync --onlyvisible --name firefox key F11")
+                                if(stdout)
+                                {
+                                    console.log("//========= F11 Command has been executed ====//")
+                                }
+                                clearTimeout(timer3)
+                            },6000)
+                          
                         }
                             clearTimeout(timer2)
                         }, 50000);
