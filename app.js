@@ -728,34 +728,40 @@ async function forceUpdater() {
     console.log("version Checker value ===> ", versionChecker)
     if (versionChecker["remoteVersion"] && versionChecker.currentVersion != versionChecker.remoteVersion) {
         console.log("//=== Verisons are not same ===//")
-        updater.forceUpdate();
+        //updater.forceUpdate();
 
-        let timer = setTimeout(() => {
-            const child = spawn('npm i', {
-                stdio: 'inherit',
-                shell: true,
-                cwd: './'
-            })
+        let updateStatus = await updater.autoUpdate();
 
-            child.on('close', (code) => {               
-                console.log(`child process exited with code ${code}`);
-            let child2 = spawn('npm i', {
+        if(updateStatus)
+        {
+            let timer = setTimeout(() => {
+                const child = spawn('npm i', {
                     stdio: 'inherit',
                     shell: true,
-                    cwd: './Saps_Rasp_Pubnub'
+                    cwd: './'
                 })
-
-            child2.on('close', (code)=>{
-                exec("pkill -f firefox")
-                setTimeout(()=>{
-                    console.log("//=============== REBOOTING ================//")
-                    exec("sudo reboot");
-                },5000)
-            })    
-            });
-            console.log("//====== Timer Completed =====//")
-            clearTimeout(timer)
-        }, 5*60000)    ///===> timer for reboot ==>  5 min
+    
+                child.on('close', (code) => {               
+                    console.log(`Backend Node modules ===>  ${code}`);
+                let child2 = spawn('npm i', {
+                        stdio: 'inherit',
+                        shell: true,
+                        cwd: './Saps_Rasp_Pubnub'
+                    })
+    
+                child2.on('close', (code)=>{
+                    console.log("//==== Fronted Node Modules ===//")
+                    exec("pkill -f firefox")
+                    setTimeout(()=>{
+                        console.log("//=============== REBOOTING ================//")
+                        exec("sudo reboot");
+                    },5000)
+                })    
+                });
+                console.log("//====== Timer Completed =====//")
+                clearTimeout(timer)
+            }, 5*60000)    ///===> timer for reboot ==>  5 min
+        }
     }
     else if (versionChecker.upToDate == true) {
         console.log("//==== Version is UpDated ===//")
