@@ -16,6 +16,8 @@ const AutoGitUpdate = require("auto-git-update");
 const { stdout, mainModule, stderr } = require("process");
 const schedule = require("node-schedule");
 
+let masterChannel = "c3RvcmFnZS5zYXBzLm9uZQ=="           ///=====> For server Backend
+
 const config = {
     repository: "https://github.com/namanshandilyapsiborg/31Aug2022Code",
     fromReleases: false,
@@ -44,8 +46,8 @@ const { ReadlineParser } = require("@serialport/parser-readline");
 // pubnub.subscribe({
 //   channels: a,
 // });
-let publishChannel;
-let frontendChannel ; 
+let publishChannel;            //===> Device Original mac ID
+let frontendChannel ;          //===> For only Frontend
 let a = [];
 
 //========================= Getting MAcID ======================//
@@ -292,9 +294,29 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
             if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Videos/${zipname}.mp4`)))
             {
                 console.log("//=== File already exist =======//")
+                //===> Pubnub Publish of Download Completion ===>
+                let timer = setTimeout(()=>{
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status : "Video Already Exist",
+                                filename : zipname,
+                                filetype : "video/mp4"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+                clearTimeout(timer)
+                },3000)
                 return ;
             }
-            else{
+            else 
+            {
                 const filePath = `${__dirname}/zippedfiles`;
 
                 download(file, filePath).then(() => {
@@ -313,21 +335,74 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
                             console.log("deleted");
                         });
                     }, 1000);
+                    //===> Pubnub Publish of Download Completion ===>
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status : "Download Success",
+                                filename : zipname,
+                                filetype : "video/mp4"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+
+
                 });
             }            
         } else if (filetype == "image/jpeg") {
             if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Images/${zipname}.jpg`)))
             {
                 console.log("//=== File already exist =======//")
+                let timer = setTimeout(()=>{
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status: "Image Already Exist",
+                                filename : zipname,
+                                filetype : "image/jpeg"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+                    clearTimeout(timer)
+                },3000)
                 return ;
             }
-            else{
+            else
+            {
                 const file = fileurl;
                 console.log("Image file url ==> ", fileurl);
                 //const filePath = `${__dirname}/zippedfiles`;
                 const filePath = `${__dirname}/Saps_Rasp_Pubnub/src/Images`;
                 download(file, filePath).then(() => {
                     console.log("//==  Image Download Completed   ==//");
+                    //===> Pubnub Publish of Download Completion ===>
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status: "Download Success",
+                                filename : zipname,
+                                filetype : "image/jpeg"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
                 });
             }
         }
@@ -381,6 +456,21 @@ async function frontendStart()
                                     return;
                                 }
                                 console.log("//=========== Chromium Has been Started ==============//")
+                                let timer2 = setTimeout(()=>{
+                                    pubnub.publish(
+                                        {
+                                            channel: masterChannel,
+                                            message: {
+                                                mac_id :  publishChannel,
+                                                eventname : "Rebooted",
+                                            },
+                                        },
+                                        (status, response) => {
+                                            console.log("Status Pubnub ===> ", status);
+                                        }
+                                    );
+                                    clearTimeout(timer2)
+                                },10000)
                             });
                             clearTimeout(timer2)
                         }, 50000);
