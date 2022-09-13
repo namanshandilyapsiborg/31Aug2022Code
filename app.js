@@ -1,4 +1,4 @@
-console.log("//============= Skai BAckend has been started ==============//")
+console.log("//============= Skai Backend has been started ==============//")
 const { pubnub } = require("./pubnub-module");
 const download = require("download");
 const unzipper = require("unzipper");
