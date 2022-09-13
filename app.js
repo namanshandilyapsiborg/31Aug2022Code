@@ -464,7 +464,7 @@ async function frontendStart()
                                     console.log("//========= F11 Command has been executed ====//")
                                 }
                                 clearTimeout(timer3)
-                            },6000)
+                            },20000)
                           
                         }
                             clearTimeout(timer2)
