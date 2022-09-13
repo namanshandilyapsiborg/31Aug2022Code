@@ -734,6 +734,27 @@ async function forceUpdater() {
 
         if(updateStatus)
         {
+            //======> For updating the Frontend Screen
+            if(frontendChannel)
+            {
+                let data = {
+                    eventname : "play",
+                    filename : "updating",
+                    displaytype : "fullscreen",
+                    filetype : "updating"
+                }
+                pubnub.publish(
+                        {
+                            channel: frontendChannel,
+                            message: data,
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    ); 
+             }
+            
+
             let timer = setTimeout(() => {
                 const child = spawn('npm i', {
                     stdio: 'inherit',
