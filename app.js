@@ -98,25 +98,31 @@ pubnub.addListener({
         if(messageEvent.channel == "c2thaVVwZGF0ZUNoYW5uZWw=")
         {
         //=====================================================================//
-        if (messageEvent.message.eventname == "update") {
+        if (messageEvent.message.eventname == "update") 
+        {
         forceUpdater()
         }
-        if (messageEvent.message.eventname == "autoUpdateTimer") {
+        if (messageEvent.message.eventname == "autoUpdateTimer") 
+        {
             autoUpdateTimer()
         }
-        if (messageEvent.message.eventname == "updateScreenEnabled") {
+        if (messageEvent.message.eventname == "updateScreenEnabled") 
+        {
             showUpdateScreen("updateScreenEnabled")
-            }
-        if (messageEvent.message.eventname == "updateScreenDisabled") {
+        }
+        if (messageEvent.message.eventname == "updateScreenDisabled") 
+        {
             showUpdateScreen("updateScreenDisabled")
         }    
-        if (messageEvent.message.eventname == "force reboot") {
+        if (messageEvent.message.eventname == "force reboot") 
+        {
             console.log("//=== Rebooting ForceFully =========//")
             exec("sudo reboot")
         }
         }
         else{
-            if (messageEvent.message.eventname === "download_video") {
+            if (messageEvent.message.eventname === "download_video") 
+            {
                 DownloadVideoZip(
                     // ==> Download Function
                     messageEvent.message.fileurl,
@@ -124,7 +130,8 @@ pubnub.addListener({
                     messageEvent.message.filetype
                 );
             }
-            if (messageEvent.message.eventname == "delete_user_file") {
+            if (messageEvent.message.eventname == "delete_user_file") 
+            {
                 //console.log("Eventname => ", messageEvent.message.eventname);
                 DeleteUserFiles(
                     messageEvent.message.uniquename,
