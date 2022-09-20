@@ -240,31 +240,38 @@ function PlayPauseVideo(data)
 }
 
 
-function showUpdateScreen(eventname)
+async function showUpdateScreen(eventname)
 {
     if(eventname && eventname == "updateScreenEnabled") 
         {
-             if(frontendChannel)
-             {
-                let data = {
-                    eventname : "play",
-                    filename : "updating",
-                    displaytype : "fullscreen",
-                    filetype : "updating"
-                }
-                if(data)
+            //=====> Comparing version ====> 
+            let versionChecker = await updater.compareVersions();
+            console.log("Version Inside showUpdateScreen ===> ", versionChecker)
+            if (versionChecker["remoteVersion"] && versionChecker.currentVersion != versionChecker.remoteVersion) 
+            {
+                console.log("//== Version are different ==//")
+                if(frontendChannel)
                 {
-                    pubnub.publish(
-                        {
-                            channel: frontendChannel,
-                            message: data,
-                        },
-                        (status, response) => {
-                            console.log("Status Pubnub ===> ", status);
-                        }
-                    );
-                }  
-             }
+                   let data = {
+                       eventname : "play",
+                       filename : "updating",
+                       displaytype : "fullscreen",
+                       filetype : "updating"
+                   }
+                   if(data)
+                   {
+                       pubnub.publish(
+                           {
+                               channel: frontendChannel,
+                               message: data,
+                           },
+                           (status, response) => {
+                               console.log("Status Pubnub ===> ", status);
+                           }
+                       );
+                   }  
+                }
+            }
         }
     if(eventname && eventname == "updateScreenDisabled")
     {
