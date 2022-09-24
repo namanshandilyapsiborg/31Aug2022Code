@@ -166,29 +166,29 @@ function App() {
             }}
           >
             <img
-              style={{ width: "300px", height: "300px", marginBottom: "10px" }}
+              style={{ width: "500px", height: "500px", marginBottom: "10px" }}
               src={qrcode}
             />
             <Typography style={{ color: "white", marginBottom: "15px" }}>
-              NOT CONNECTED TO INTERNET:{" "}
+              NOT CONNECTED TO INTERNET{" "}
+            </Typography>
+            <Typography style={{ color: "white", marginBottom: "25px" }}>
+              STEPS TO CONNECT TO WiFi{" "}
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              Steps To Connect To WiFi:{" "}
+              1. Press & Hold Button 4 On Device For 3 Seconds{" "}
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              1. Press & Hold Button 4 On Device For 3 Second{" "}
+              2. Now Turn ON Your Mobile WiFi & Scan Your Device{" "}
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              2. Turn ON your Mobile WiFi, Scan Your Device{" "}
+              3. Now Connect Your Mobile To Device
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              3. Connect Your Mobile To Device
+              4. Now Scan the Upper QR Code And Open The URL Provided Into The Browser
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              4. Now Scan the Upper QR Code
-            </Typography>
-            <Typography style={{ color: "white", marginBottom: "10px" }}>
-              5. Now Enter Credential of Your WiFi
+              5. Now Enter Credential of Your WiFi, And Press Connect
             </Typography>
           </div>
         </>
@@ -213,8 +213,8 @@ function App() {
                 >
                   <img
                     style={{
-                      width: "300px",
-                      height: "300px",
+                      width: "500px",
+                      height: "500px",
                       marginBottom: "5px",
                       backgroundSize: "cover",
                       backgroundPosition: "center",
