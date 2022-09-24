@@ -169,20 +169,26 @@ function App() {
               style={{ width: "300px", height: "300px", marginBottom: "10px" }}
               src={qrcode}
             />
-            <Typography style={{ color: "white", marginBottom: "10px" }}>
-              Steps To Connect :{" "}
+            <Typography style={{ color: "white", marginBottom: "15px" }}>
+              NOT CONNECTED TO INTERNET:{" "}
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              1. Turn ON your Mobile WiFi{" "}
+              Steps To Connect To WiFi:{" "}
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              2. Connect Your Mobile To Device
+              1. Press & Hold Button 4 On Device For 3 Second{" "}
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              3. Now Scan the Upper QR Code
+              2. Turn ON your Mobile WiFi, Scan Your Device{" "}
             </Typography>
             <Typography style={{ color: "white", marginBottom: "10px" }}>
-              4. Now Enter Credential of Your WiFi
+              3. Connect Your Mobile To Device
+            </Typography>
+            <Typography style={{ color: "white", marginBottom: "10px" }}>
+              4. Now Scan the Upper QR Code
+            </Typography>
+            <Typography style={{ color: "white", marginBottom: "10px" }}>
+              5. Now Enter Credential of Your WiFi
             </Typography>
           </div>
         </>
