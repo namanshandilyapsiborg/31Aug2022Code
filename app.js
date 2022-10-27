@@ -15,6 +15,7 @@ var qr = require("qr-image");
 const AutoGitUpdate = require("auto-git-update");
 const { stdout, mainModule, stderr } = require("process");
 const schedule = require("node-schedule");
+const checkDiskSpace = require('check-disk-space').default
 
 let masterChannel = "c3RvcmFnZS5zYXBzLm9uZQ=="           ///=====> For server Backend
 
@@ -87,7 +88,7 @@ pubnub.addListener({
             console.log("statusEvent ===> ", statusEvent.category);
         } else {
             console.log("//== Connection failed ===//");
-            pubnub.reconnect();
+            // pubnub.reconnect();
         }
     },
     category: function (e) {
@@ -119,6 +120,11 @@ pubnub.addListener({
             console.log("//=== Rebooting ForceFully =========//")
             exec("sudo reboot")
         }
+        if (messageEvent.message.eventname == "space available") {
+            console.log("//===Checking Disk Space =========//")
+            checkSpace();
+    }
+
         }
         else{
             if (messageEvent.message.eventname === "download_video") 
@@ -151,12 +157,60 @@ pubnub.addListener({
                 console.log("//=== Rebooting ForceFully =========//")
                 exec("sudo reboot")
             }
+
+            if (messageEvent.message.eventname == "space available") {
+                console.log("//===Checking Disk Space =========//")
+                checkSpace();
+        }
         }  
     },
     presence: function (presenceEvent) {
         console.log("Handle Presence ===> ", presenceEvent);
     },
 });
+
+
+//=======> Checking DiskSpace=======>
+function checkSpace()
+{
+// On Linux or macOS
+    checkDiskSpace('/home').then((diskSpace) => {
+    console.log(diskSpace)
+    // {
+    //     diskPath: '/',
+    //     free: 12345678,
+    //     size: 98756432
+    // }
+    // Note: `free` and `size` are in bytes
+
+    totalSpace = (diskSpace.size / 1024) / 1024 / 1024;
+
+    freeSpace = (diskSpace.free / 1024) / 1024 / 1024;
+
+    totalSpace = totalSpace.toFixed(3);
+    freeSpace = freeSpace.toFixed(3);
+
+    console.log("Total Space in GB",totalSpace);
+    console.log("Free Space in GB",freeSpace);
+
+    pubnub.publish(
+        {
+            channel: masterChannel,
+            message: {
+                mac_id :  publishChannel,
+                eventname : "diskSpace",
+                totalspace : totalSpace,
+                freespace : freeSpace
+            },
+        },
+        (status, response) => {
+            console.log("Status Pubnub ===> ", status);
+        }
+    );
+})
+}
+
+checkSpace();
 
 //===> To play Pause 
 function PlayPauseVideo(data)
@@ -305,6 +359,9 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
     console.log("Inside DownloadVideoZip ==> ", fileurl);
     if (fileurl && zipname && filetype) {
         const file = fileurl;
+
+        checkSpace();
+
         //===> for video download ====>
         if (filetype == "video/mp4") {
             console.log(" //=== Video/mp4 ======//");
@@ -427,7 +484,7 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
     }
 }
 
-//=================== Delet4e files ==========================//
+//=================== Delete files ==========================//
 // Saps_Rasp_Pubnub/src/Videos
 function DeleteUserFiles(uniquefilename, filetype) {
     console.log("//====== Delete user files ===== //");
