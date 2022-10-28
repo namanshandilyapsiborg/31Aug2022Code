@@ -87,7 +87,7 @@ pubnub.addListener({
         if (statusEvent.category === "PNConnectedCategory") {
             console.log("statusEvent ===> ", statusEvent.category);
         } else {
-            console.log("//== Connection failed ===//");
+            console.log("//== Connection failed backend ===//");
             // pubnub.reconnect();
         }
     },

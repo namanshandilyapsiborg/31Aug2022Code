@@ -6,7 +6,7 @@ const pubnub = new PubNub({
   subscribeKey: "sub-c-81c16c55-f391-4f72-8e57-2d9e052a360c",
   //uuid: uuid,
   restore: true,
-  presenceTimeout: 20,
+  // presenceTimeout: 20,
   autoNetworkDetection : true,
   userId: uuid,
   //keepAlive : true,
