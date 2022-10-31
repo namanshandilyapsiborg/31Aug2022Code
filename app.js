@@ -178,7 +178,7 @@ function restartstatus()
             message: {
                 mac_id :  publishChannel,
                 eventname : "devicerestart",
-                status : restarted
+                status : "restarted"
             },
         },
         (status, response) => {
@@ -264,7 +264,7 @@ function PlayPauseVideo(data)
                     message: {
                         mac_id :  publishChannel,
                         eventname : "playresp",
-                        status : played
+                        status : "played"
                     },
                 },
                 (status, response) => {
@@ -301,7 +301,7 @@ function PlayPauseVideo(data)
                     message: {
                         mac_id :  publishChannel,
                         eventname : "playresp",
-                        status : played
+                        status : "played"
                     },
                 },
                 (status, response) => {
@@ -333,7 +333,7 @@ function PlayPauseVideo(data)
                     message: {
                         mac_id :  publishChannel,
                         eventname : "playresp",
-                        status : played
+                        status : "played"
                     },
                 },
                 (status, response) => {
@@ -363,7 +363,7 @@ function PlayPauseVideo(data)
                 message: {
                     mac_id :  publishChannel,
                     eventname : "playresp",
-                    status : stopped
+                    status : "stopped"
                 },
             },
             (status, response) => {
