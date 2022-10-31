@@ -170,6 +170,27 @@ pubnub.addListener({
 });
 
 
+function restartstatus()
+{
+    pubnub.publish(
+        {
+            channel: masterChannel,
+            message: {
+                mac_id :  publishChannel,
+                eventname : "devicerestart",
+                status : restarted
+            },
+        },
+        (status, response) => {
+            console.log("Status Pubnub ===> ", status);
+        }
+    );
+}
+
+
+restartstatus();
+
+
 //=======> Checking DiskSpace=======>
 function checkSpace()
 {
