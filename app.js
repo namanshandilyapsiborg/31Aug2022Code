@@ -29,6 +29,26 @@ const moment = require('moment');
 
 let time = moment();
 
+var opts = {
+
+    width: 1280,
+
+    height: 720,
+
+    quality: 100,
+
+    frames: 60,
+
+    output: "jpeg",
+
+    callbackReturn: "location",
+};
+
+
+//Creates webcam instance
+
+var Webcam = NodeWebcam.create( opts );
+
 
 let masterChannel = "c3RvcmFnZS5zYXBzLm9uZQ=="           ///=====> For server Backend
 
