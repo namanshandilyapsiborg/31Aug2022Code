@@ -1,6 +1,6 @@
 {
   "name": "31aug2022code",
-  "version": "1.0.97",
+  "version": "1.0.0",
   "description": "For resp pi ",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/namanshandilyapsiborg/31Aug2022Code#readme",
   "dependencies": {
+    "@google-cloud/vision": "^3.0.1",
     "@serialport/parser-readline": "^10.3.0",
     "auto-git-update": "^2.1.2",
     "check-disk-space": "^3.3.1",
@@ -26,7 +27,9 @@
     "download": "^8.0.0",
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
+    "moment": "^2.29.4",
     "node-schedule": "^2.1.0",
+    "node-webcam": "^0.8.1",
     "onoff": "^6.0.3",
     "pubnub": "^7.2.0",
     "qr-image": "^3.2.0",

@@ -17,6 +17,19 @@ const { stdout, mainModule, stderr } = require("process");
 const schedule = require("node-schedule");
 const checkDiskSpace = require('check-disk-space').default
 
+
+// Imports the Google Cloud client library
+const vision = require('@google-cloud/vision');
+
+// Import the Node_Webcam liberary
+var NodeWebcam = require( "node-webcam" );
+
+// Import the Moment liberary for time
+const moment = require('moment');
+
+let time = moment();
+
+
 let masterChannel = "c3RvcmFnZS5zYXBzLm9uZQ=="           ///=====> For server Backend
 
 const config = {
@@ -50,6 +63,10 @@ const { ReadlineParser } = require("@serialport/parser-readline");
 let publishChannel;            //===> Device Original mac ID
 let frontendChannel ;          //===> For only Frontend
 let a = [];
+
+//for live content
+let liveContentLink;
+let fileType;
 
 //========================= Getting MAcID ======================//
 function getChannel() {
@@ -152,6 +169,23 @@ pubnub.addListener({
             if (messageEvent.message.eventname == "stop") {
                 PlayPauseVideo(messageEvent.message)
               }
+
+            if (messageEvent.message.eventname == "getlive") {
+                pubnub.publish(
+                    {
+                        channel: publishChannel,
+                        message: {
+                            mac_id :  publishChannel,
+                            eventname : "getlivelink",
+                            link : liveContentLink,
+                            fileType : fileType
+                        },
+                    },
+                    (status, response) => {
+                        console.log("Status Pubnub ===> ", status);
+                    }
+                );
+             }  
            
             if (messageEvent.message.eventname == "force reboot") {
                 console.log("//=== Rebooting ForceFully =========//")
@@ -237,8 +271,15 @@ checkSpace();
 function PlayPauseVideo(data)
 {
     console.log("playPauseVideo func() ==> ", data)
+
+    //for google vision api------------------------------------------
+
+    orderId = data.orderId;
+
     if(data.eventname == "play")
     {
+        liveContentLink = data.contentLink
+        fileType = data.filetype
         if (data && data.filetype == "image/jpeg") 
         {
           console.log("Image name ==> ", data.filename);
@@ -341,9 +382,15 @@ function PlayPauseVideo(data)
                 }
             );
         }
+
+            // start timer to click photo
+            console.log("Starting timer for photo");
+            timer = setInterval(click_photo, 5000);
     }
     else if(data.eventname == "stop")
     {
+        liveContentLink = null;
+        fileType = null;
         if(frontendChannel)
         {
            pubnub.publish(
@@ -371,10 +418,67 @@ function PlayPauseVideo(data)
             }
         );
 
+        console.log("Clearing timer for photo");
+        clearInterval(timer);
+
     }
    
 }
 
+
+// let timer = setInterval(click_photo, 5000);
+let timer;
+
+async function click_photo(){
+        await NodeWebcam.capture( `./images/photo.jpg`, opts, function( err, data ) {
+            console.log("Quickstart after photo clicked ==>")
+            quickstart();
+
+        // image = "<img src='" + data + "'>";
+    
+    });
+}
+
+Webcam.clear();
+
+//------------------Google Vision---------------------------------//
+
+async function quickstart() {
+
+    var slot = time.format('h');
+
+    console.log(
+    "Today is:",slot
+    );
+
+    // Creates a client
+    const client = new vision.ImageAnnotatorClient({
+        keyFilename: "visionKey2.json"
+    });
+  
+    // // Performs label detection on the9 image file
+    const [result] = await client.faceDetection('./images/photo.jpg');
+    const faces = result.faceAnnotations;
+    faceCount = faces.length;
+    console.log('Faces ==>:', faceCount);
+
+    pubnub.publish(
+        {
+            channel: masterChannel,
+            message: {
+                mac_id :  publishChannel,
+                eventname : "faceCount",
+                orderId : orderId,
+                faceCount : faceCount,
+                timeSlot : slot
+            },
+        },
+        (status, response) => {
+            console.log("Status Pubnub ===> ", status);
+        }
+        );
+  }
+//   quickstart();
 
 async function showUpdateScreen(eventname)
 {
@@ -744,7 +848,22 @@ parser.on("data", (data) => {
     }
 
     if (data.includes("Shutting Down")) {
+
         console.log(" ----- shutting down getting hit ---- ");
+        pubnub.publish(
+            {
+                channel: masterChannel,
+                message: {
+                    mac_id :  publishChannel,
+                    eventname : "shutdown",
+                    status : "shutdown"
+                },
+            },
+            (status, response) => {
+                console.log("Status Pubnub ===> ", status);
+            }
+        );
+
         //exec("sudo shutdown now")
         exec("pkill -o chromium", (e, i) => {
             if (e) {
