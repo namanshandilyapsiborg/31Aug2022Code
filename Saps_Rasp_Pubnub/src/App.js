@@ -263,7 +263,7 @@ function App() {
                                   <video
                                     style={{
                                       backgroundColor: "red",
-                                      objectFit: "cover",
+                                      objectFit: "contain",
                                       minHeight: "100%",
                                       minWidth: "100%",
                                     }}
@@ -283,11 +283,11 @@ function App() {
                               {filetype && filetype == "image/jpeg" && (
                                 <img
                                   style={{
-                                    objectFit: "cover",
+                                    objectFit: "contain",
                                     minHeight: "100%",
                                     minWidth: "100%",
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
+                                    backgroundSize: "contain",
+                                    // backgroundPosition: "",
                                     backgroundRepeat: "no-repeat",
                                   }}
                                   // src={SapsPurple}
@@ -301,7 +301,7 @@ function App() {
                                <ReactPlayer
                                playing
                                width={"100%"}
-                               height={"100vh"}
+                               height={"100%"}
                                //url="https://www.youtube.com/watch?v=668nUCeBHyY"
                                url={videoname && videoname}
                                muted={true}
