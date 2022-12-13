@@ -296,16 +296,29 @@ function App() {
                               )}
 
                               {filetype && filetype == "url" && (
-                               <ReactPlayer
-                               playing
-                               width={"100%"}
-                               height={"100vh"}
-                               //url="https://www.youtube.com/watch?v=668nUCeBHyY"
-                               url={videoname && videoname}
-                               muted={true}
-                               autoplay={true}
-                               loop={true}
-                             />
+                                  <div className="player-wrapper">
+                                  <ReactPlayer
+                                    url={videoname && videoname}
+                                    className="react-player"
+                                    playing
+                                    width="100%"
+                                    height="100%"
+                                    controls={false}
+                                  />
+                                </div>
+
+
+
+                            //    <ReactPlayer
+                            //    playing
+                            //    width={"100%"}
+                            //    height={"100vh"}
+                            //    //url="https://www.youtube.com/watch?v=668nUCeBHyY"
+                            //    url={videoname && videoname}
+                            //    muted={true}
+                            //    autoplay={true}
+                            //    loop={true}
+                            //  />
                               )}
 
                               {/* ==================== For Loading ============== */}
