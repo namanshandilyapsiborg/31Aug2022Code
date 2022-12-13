@@ -27,7 +27,9 @@ var NodeWebcam = require( "node-webcam" );
 // Import the Moment liberary for time
 const moment = require('moment');
 
-let time = moment();
+// let time = moment();
+
+var slot;
 
 var opts = {
 
@@ -286,6 +288,7 @@ function checkSpace()
 }
 
 checkSpace();
+let timer = null;
 
 //===> To play Pause 
 function PlayPauseVideo(data)
@@ -298,6 +301,8 @@ function PlayPauseVideo(data)
 
     if(data.eventname == "play")
     {
+        console.log("Clearing timer for photo in play function");
+        clearInterval(timer);
         liveContentLink = data.contentLink
         fileType = data.filetype
         if (data && data.filetype == "image/jpeg") 
@@ -409,6 +414,9 @@ function PlayPauseVideo(data)
     }
     else if(data.eventname == "stop")
     {
+        console.log("Clearing timer for photo in stop function");
+        clearInterval(timer);
+
         liveContentLink = null;
         fileType = null;
         if(frontendChannel)
@@ -438,8 +446,8 @@ function PlayPauseVideo(data)
             }
         );
 
-        console.log("Clearing timer for photo");
-        clearInterval(timer);
+        // console.log("Clearing timer for photo");
+        // clearInterval(timer);
 
     }
    
@@ -447,7 +455,7 @@ function PlayPauseVideo(data)
 
 
 // let timer = setInterval(click_photo, 5000);
-let timer;
+
 
 async function click_photo(){
         await NodeWebcam.capture( `./images/photo.jpg`, opts, function( err, data ) {
@@ -465,7 +473,9 @@ Webcam.clear();
 
 async function quickstart() {
 
-    var slot = time.format('h');
+    let time = moment();
+
+    slot = time.format('H');
 
     console.log(
     "Today is:",slot
@@ -477,7 +487,21 @@ async function quickstart() {
     });
   
     // // Performs label detection on the9 image file
-    const [result] = await client.faceDetection('./images/photo.jpg');
+    // const [result] = await client.faceDetection('./images/photo.jpg');
+
+    const [result] = await client.faceDetection({
+        image: { 
+          source: { filename: './images/photo.jpg' } 
+        },
+        features: [
+          {
+            maxResults: 2000,
+            type: vision.protos.google.cloud.vision.v1.Feature.Type.FACE_DETECTION,
+            // type: "FACE_DETECTION",
+          },
+        ],
+      });
+      
     const faces = result.faceAnnotations;
     faceCount = faces.length;
     console.log('Faces ==>:', faceCount);
