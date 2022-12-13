@@ -262,10 +262,13 @@ function App() {
                                 <>
                                   <video
                                     style={{
-                                      backgroundColor: "red",
+                                      // backgroundColor: "red",
                                       objectFit: "contain",
                                       minHeight: "100%",
                                       minWidth: "100%",
+                                      height: "100%",
+                                      width: "100%",
+                                      // paddingtop: "56.25%",
                                     }}
                                     controls
                                     loop
@@ -286,6 +289,8 @@ function App() {
                                     objectFit: "contain",
                                     minHeight: "100%",
                                     minWidth: "100%",
+                                    height: "100%",
+                                    width: "100%",
                                     backgroundSize: "contain",
                                     // backgroundPosition: "",
                                     backgroundRepeat: "no-repeat",
