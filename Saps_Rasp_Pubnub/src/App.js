@@ -306,7 +306,7 @@ function App() {
                                <ReactPlayer
                                playing
                                width={"100%"}
-                               height={"100%"}
+                               height={"100vh"}
                                //url="https://www.youtube.com/watch?v=668nUCeBHyY"
                                url={videoname && videoname}
                                muted={true}
