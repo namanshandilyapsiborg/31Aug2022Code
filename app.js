@@ -33,9 +33,9 @@ var slot;
 
 var opts = {
 
-    width: 1280,
+    width: 1920,
 
-    height: 720,
+    height: 1080,
 
     quality: 100,
 
@@ -48,6 +48,7 @@ var opts = {
 
 
 var update_screen = false;
+let timer = null;
 
 //Creates webcam instance
 
@@ -298,7 +299,7 @@ function checkSpace()
 }
 
 checkSpace();
-let timer = null;
+
 
 //===> To play Pause 
 function PlayPauseVideo(data)
@@ -578,6 +579,11 @@ async function showUpdateScreen(eventname)
                    }  
                 }
                 update_screen = true;
+                if(timer != null)
+                {
+                    console.log("Clearing timer for photo in Update Screen Function");
+                    clearInterval(timer); 
+                }
             }
         }
     if(eventname && eventname == "updateScreenDisabled")
