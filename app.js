@@ -47,6 +47,8 @@ var opts = {
 };
 
 
+var update_screen = false;
+
 //Creates webcam instance
 
 var Webcam = NodeWebcam.create( opts );
@@ -140,7 +142,7 @@ pubnub.addListener({
         //=====================================================================//
         if (messageEvent.message.eventname == "update") 
         {
-        forceUpdater()
+            forceUpdater()
         }
         if (messageEvent.message.eventname == "autoUpdateTimer") 
         {
@@ -186,10 +188,18 @@ pubnub.addListener({
             //============================= Play/Pause ===========================================//
             if (messageEvent.message.eventname == "play") 
             {
-                PlayPauseVideo(messageEvent.message)
+                if(!update_screen)
+                {
+                    PlayPauseVideo(messageEvent.message)
+                }
+                
             }   //=================== to stop the video =================>
             if (messageEvent.message.eventname == "stop") {
-                PlayPauseVideo(messageEvent.message)
+                if(!update_screen)
+                {
+                    PlayPauseVideo(messageEvent.message)
+                }
+                
               }
 
             if (messageEvent.message.eventname == "getlive") {
@@ -338,6 +348,10 @@ function PlayPauseVideo(data)
                 }
             );
 
+              // start timer to click photo
+              console.log("Starting timer for photo");
+              timer = setInterval(click_photo, 5000);          
+
              
           }
         }
@@ -375,6 +389,10 @@ function PlayPauseVideo(data)
                 }
             );
 
+              // start timer to click photo
+              console.log("Starting timer for photo");
+              timer = setInterval(click_photo, 5000);          
+
           }
         }
         if (data && data.filetype == "url") 
@@ -406,11 +424,15 @@ function PlayPauseVideo(data)
                     console.log("Status Pubnub ===> ", status);
                 }
             );
-        }
-
+                        
             // start timer to click photo
             console.log("Starting timer for photo");
             timer = setInterval(click_photo, 5000);
+        }
+
+            // // start timer to click photo
+            // console.log("Starting timer for photo");
+            // timer = setInterval(click_photo, 5000);
     }
     else if(data.eventname == "stop")
     {
@@ -501,7 +523,7 @@ async function quickstart() {
           },
         ],
       });
-      
+
     const faces = result.faceAnnotations;
     faceCount = faces.length;
     console.log('Faces ==>:', faceCount);
@@ -555,6 +577,7 @@ async function showUpdateScreen(eventname)
                        );
                    }  
                 }
+                update_screen = true;
             }
         }
     if(eventname && eventname == "updateScreenDisabled")
@@ -580,6 +603,7 @@ async function showUpdateScreen(eventname)
                );
            }  
         }
+        update_screen = false;
     }    
 }
 
