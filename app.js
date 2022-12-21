@@ -579,11 +579,11 @@ async function showUpdateScreen(eventname)
                    }  
                 }
                 update_screen = true;
-                if(timer != null)
-                {
+                // if(timer != null)
+                // {
                     console.log("Clearing timer for photo in Update Screen Function");
                     clearInterval(timer); 
-                }
+                // }
             }
         }
     if(eventname && eventname == "updateScreenDisabled")
