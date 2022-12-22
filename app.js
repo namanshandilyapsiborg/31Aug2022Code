@@ -49,6 +49,7 @@ var opts = {
 
 var update_screen = false;
 let timer = null;
+var image;
 
 //Creates webcam instance
 
@@ -479,13 +480,25 @@ function PlayPauseVideo(data)
 
 // let timer = setInterval(click_photo, 5000);
 
+async function sendPhotoToServer(orderId, photo){
+    try{
+        let body = {
+            orderId,
+            photo
+        }
+        let resp = await axios.post("http://api.postmyad.ai/api/order/orderViewsImage", body)
+        console.log("response from sendPhotoToServer====>", resp.data)
+    }catch (error){
+        console.log("Error From sendPhotoToServer====>", error)
+    }
+}
+
 
 async function click_photo(){
         await NodeWebcam.capture( `./images/photo.jpg`, opts, function( err, data ) {
+            image = "<img src='" + data + "'>";
             console.log("Quickstart after photo clicked ==>")
-            quickstart();
-
-        // image = "<img src='" + data + "'>";
+            quickstart();       
     
     });
 }
@@ -544,6 +557,8 @@ async function quickstart() {
             console.log("Status Pubnub ===> ", status);
         }
         );
+
+        sendPhotoToServer(orderId, image)
   }
 //   quickstart();
 

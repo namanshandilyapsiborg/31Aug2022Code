@@ -22,6 +22,7 @@
     "@google-cloud/vision": "^3.0.1",
     "@serialport/parser-readline": "^10.3.0",
     "auto-git-update": "^2.1.2",
+    "axios": "^1.2.1",
     "check-disk-space": "^3.3.1",
     "child_process": "^1.0.2",
     "download": "^8.0.0",
