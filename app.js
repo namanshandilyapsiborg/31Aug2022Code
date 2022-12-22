@@ -43,7 +43,7 @@ var opts = {
 
     output: "jpeg",
 
-    callbackReturn: "location",
+    callbackReturn: "base64",
 };
 
 
