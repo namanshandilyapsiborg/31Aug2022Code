@@ -40,7 +40,7 @@ var opts = {
 
     quality: 100,
 
-    frames: 60,
+    frames: 1,
 
     output: "jpeg",
 
@@ -188,6 +188,12 @@ pubnub.addListener({
                     messageEvent.message.filetype
                 );
             }
+
+            // if (messageEvent.message.eventname == "get_user_file_name") 
+            // {
+            //     //console.log("Eventname => ", messageEvent.message.eventname);
+            //     getUserFilesName(messageEvent.message.filetype);
+            // }            
             //============================= Play/Pause ===========================================//
             if (messageEvent.message.eventname == "play") 
             {
@@ -497,9 +503,11 @@ async function sendPhotoToServer(orderId, photo){
 
 async function click_photo(){
         await NodeWebcam.capture( `./images/photo.jpg`, opts, function( err, data ) {
-            image = "<img src='" + data + "'>";
+            // image = "<img src='" + data + "'>";
+            image = data;
             console.log("Quickstart after photo clicked ==>")
-            quickstart();       
+            // quickstart();  
+            sendPhotoToServer(orderId, image);     
     
     });
 }
@@ -508,59 +516,59 @@ Webcam.clear();
 
 //------------------Google Vision---------------------------------//
 
-async function quickstart() {
+// async function quickstart() {
 
-    let time = moment();
+//     let time = moment();
 
-    slot = time.format('H');
+//     slot = time.format('H');
 
-    console.log(
-    "Today is:",slot
-    );
+//     console.log(
+//     "Today is:",slot
+//     );
 
-    // Creates a client
-    const client = new vision.ImageAnnotatorClient({
-        keyFilename: "visionKey2.json"
-    });
+//     // Creates a client
+//     const client = new vision.ImageAnnotatorClient({
+//         keyFilename: "visionKey2.json"
+//     });
   
-    // // Performs label detection on the9 image file
-    // const [result] = await client.faceDetection('./images/photo.jpg');
+//     // // Performs label detection on the9 image file
+//     // const [result] = await client.faceDetection('./images/photo.jpg');
 
-    const [result] = await client.faceDetection({
-        image: { 
-          source: { filename: './images/photo.jpg' } 
-        },
-        features: [
-          {
-            maxResults: 2000,
-            type: vision.protos.google.cloud.vision.v1.Feature.Type.FACE_DETECTION,
-            // type: "FACE_DETECTION",
-          },
-        ],
-      });
+//     const [result] = await client.faceDetection({
+//         image: { 
+//           source: { filename: './images/photo.jpg' } 
+//         },
+//         features: [
+//           {
+//             maxResults: 2000,
+//             type: vision.protos.google.cloud.vision.v1.Feature.Type.FACE_DETECTION,
+//             // type: "FACE_DETECTION",
+//           },
+//         ],
+//       });
 
-    const faces = result.faceAnnotations;
-    faceCount = faces.length;
-    console.log('Faces ==>:', faceCount);
+//     const faces = result.faceAnnotations;
+//     faceCount = faces.length;
+//     console.log('Faces ==>:', faceCount);
 
-    pubnub.publish(
-        {
-            channel: masterChannel,
-            message: {
-                mac_id :  publishChannel,
-                eventname : "faceCount",
-                orderId : orderId,
-                faceCount : faceCount,
-                timeSlot : slot
-            },
-        },
-        (status, response) => {
-            console.log("Status Pubnub ===> ", status);
-        }
-        );
+//     pubnub.publish(
+//         {
+//             channel: masterChannel,
+//             message: {
+//                 mac_id :  publishChannel,
+//                 eventname : "faceCount",
+//                 orderId : orderId,
+//                 faceCount : faceCount,
+//                 timeSlot : slot
+//             },
+//         },
+//         (status, response) => {
+//             console.log("Status Pubnub ===> ", status);
+//         }
+//         );
 
-        sendPhotoToServer(orderId, image)
-  }
+//         sendPhotoToServer(orderId, image)
+//   }
 //   quickstart();
 
 async function showUpdateScreen(eventname)
@@ -759,6 +767,82 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
         }
     }
 }
+
+
+// var fileName = [];
+// var fileTime = [];
+
+// const imageFolder = './Saps_Rasp_Pubnub/src/Images/';
+// const videoFolder = './Saps_Rasp_Pubnub/src/Videos/';
+
+// function createdDate (fileFolder, file) {  
+//   const { birthtime } = fs.statSync(`${fileFolder}${file}`)
+
+//   return birthtime
+// }
+
+// function readFileNameAndTime (fileFolder) {  
+//     fs.readdir(fileFolder, (err, files) => {
+//         files.forEach(file => {
+//           fileName[fileName.length] = file;
+//           console.log(fileName);
+//           fileTime[fileTime.length] = createdDate(testFolder, file);
+//           console.log(fileTime);
+//           // sendFileNameToServer(fileName, fileTime);
+//           // console.log("fileName array size",fileName.length);
+//           // console.log("fileTime array size",fileTime.length);
+//         });
+//       });
+//   }
+
+
+// async function getUserFilesName(filetype) {
+
+//     if(filetype === "video/mp4")
+//     {
+//         readFileNameAndTime (videoFolder)
+//     }
+//     else if(filetype === "image/jpeg")
+//     {
+//         readFileNameAndTime (imageFolder)
+//     }
+
+
+
+//     try{
+//         let body = {
+//             fileName,
+//             fileTime
+//         }
+
+//         let resp = await axios.post("http://api.postmyad.ai/api/order/orderViewsImage", body)
+//         console.log("response from sendPhotoToServer====>", resp.data)
+        
+//     }catch (error){
+//         console.log("Error From sendPhotoToServer====>", error)
+//     }
+
+
+
+// }
+
+
+
+// async function sendFileNameToServer(fileName, fileTime){
+    // try{
+    //     let body = {
+    //         fileName,
+    //         fileTime
+    //     }
+    //     let resp = await axios.post("http://api.postmyad.ai/api/order/orderViewsImage", body)
+    //     console.log("response from sendPhotoToServer====>", resp.data)
+    // }catch (error){
+    //     console.log("Error From sendPhotoToServer====>", error)
+    // }
+// }
+
+
+
 
 //=================== Delete files ==========================//
 // Saps_Rasp_Pubnub/src/Videos
