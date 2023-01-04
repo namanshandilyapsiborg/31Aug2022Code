@@ -491,6 +491,7 @@ async function sendPhotoToServer(orderId, photo){
     try{
         let body = {
             orderId,
+            publishChannel,
             photo
         }
         let resp = await axios.post("http://api.postmyad.ai/api/order/orderViewsImage", body)
