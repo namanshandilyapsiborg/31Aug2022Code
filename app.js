@@ -95,6 +95,8 @@ let a = [];
 let liveContentLink;
 let fileType;
 
+
+
 //========================= Getting MAcID ======================//
 function getChannel() {
     if (fs.existsSync("./realmacadd.json") && fs.existsSync("./frontendMac.json") ) {
@@ -189,11 +191,11 @@ pubnub.addListener({
                 );
             }
 
-            // if (messageEvent.message.eventname == "get_user_file_name") 
-            // {
-            //     //console.log("Eventname => ", messageEvent.message.eventname);
-            //     getUserFilesName(messageEvent.message.filetype);
-            // }            
+            if (messageEvent.message.eventname == "get_device_file") 
+            {
+                //console.log("Eventname => ", messageEvent.message.eventname);
+                getUserFilesName(messageEvent.message.filetype);
+            }            
             //============================= Play/Pause ===========================================//
             if (messageEvent.message.eventname == "play") 
             {
@@ -770,11 +772,8 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
 }
 
 
-// var fileName = [];
-// var fileTime = [];
-
-// const imageFolder = './Saps_Rasp_Pubnub/src/Images/';
-// const videoFolder = './Saps_Rasp_Pubnub/src/Videos/';
+const imageFolder = './Saps_Rasp_Pubnub/src/Images/';
+const videoFolder = './Saps_Rasp_Pubnub/src/Videos/';
 
 // function createdDate (fileFolder, file) {  
 //   const { birthtime } = fs.statSync(`${fileFolder}${file}`)
@@ -782,50 +781,54 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
 //   return birthtime
 // }
 
-// function readFileNameAndTime (fileFolder) {  
-//     fs.readdir(fileFolder, (err, files) => {
-//         files.forEach(file => {
-//           fileName[fileName.length] = file;
-//           console.log(fileName);
-//           fileTime[fileTime.length] = createdDate(testFolder, file);
-//           console.log(fileTime);
-//           // sendFileNameToServer(fileName, fileTime);
-//           // console.log("fileName array size",fileName.length);
-//           // console.log("fileTime array size",fileTime.length);
-//         });
-//       });
-//   }
+async function readFileNameAndTime (fileFolder, filetype) { 
+    
+    try{
 
+        let file = await fs.promises.readdir(fileFolder)
 
-// async function getUserFilesName(filetype) {
+        let body = {
+            files:file,
+            deviceMacId:publishChannel,
+            fileType:filetype
+        }
 
-//     if(filetype === "video/mp4")
-//     {
-//         readFileNameAndTime (videoFolder)
-//     }
-//     else if(filetype === "image/jpeg")
-//     {
-//         readFileNameAndTime (imageFolder)
-//     }
+        let resp = await axios.post("http://api.postmyad.ai/api/device/deviceGallery/deviceFiles", body)
+        console.log("response from sendPhotoToServer====>", resp.data)
 
-
-
-//     try{
-//         let body = {
-//             fileName,
-//             fileTime
-//         }
-
-//         let resp = await axios.post("http://api.postmyad.ai/api/order/orderViewsImage", body)
-//         console.log("response from sendPhotoToServer====>", resp.data)
+        pubnub.publish(
+            {
+                channel: masterChannel,
+                message: {
+                    mac_id :  publishChannel,
+                    eventname : "resp_get_device_file",
+                    status: "Get File Success",
+                },
+            },
+            (status, response) => {
+                console.log("Status Pubnub ===> ", status);
+            }
+        );
         
-//     }catch (error){
-//         console.log("Error From sendPhotoToServer====>", error)
-//     }
+    }catch (error){
+        console.log("Error From sendPhotoToServer====>", error)
+    }
+
+  }
 
 
+async function getUserFilesName(filetype) {
 
-// }
+    if(filetype === "video/mp4")
+    {
+        await readFileNameAndTime (videoFolder, filetype)
+    }
+    else if(filetype === "image/jpeg")
+    {
+        await readFileNameAndTime (imageFolder, filetype)
+    }
+
+}
 
 
 
@@ -1224,12 +1227,21 @@ async function forceUpdater() {
                     })
     
                 child2.on('close', (code)=>{
+                    
                     console.log("//==== Fronted Node Modules ===//")
-                    exec("pkill -f firefox")
-                    setTimeout(()=>{
-                        console.log("//=============== REBOOTING ================//")
-                        exec("sudo reboot");
-                    },5000)
+
+                    execShellCommand().then(() => {
+                        exec("pkill -f firefox")
+                        setTimeout(()=>{
+                            console.log("//=============== REBOOTING ================//")
+                            exec("sudo reboot");
+                        },50000)
+                    });                    
+                    // exec("pkill -f firefox")
+                    // setTimeout(()=>{
+                    //     console.log("//=============== REBOOTING ================//")
+                    //     exec("sudo reboot");
+                    // },10000)
                 })    
                 });
                 console.log("//====== Timer Completed =====//")
@@ -1242,6 +1254,18 @@ async function forceUpdater() {
         return;
     }
 }
+
+
+function execShellCommand() {
+    return new Promise((resolve, reject) => {
+     exec("sudo apt-get install fswebcam", (error, stdout, stderr) => {
+      if (error) {
+       console.warn(error);
+      }
+      resolve(stdout? stdout : stderr);
+     });
+    });
+   }
 
 let scheduleJob;    
 
@@ -1288,4 +1312,6 @@ async function autoUpdateTimer() {
 
  })
 }
+
+
 
