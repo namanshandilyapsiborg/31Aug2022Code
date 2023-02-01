@@ -175,6 +175,26 @@ pubnub.addListener({
 
         }
         else{
+
+            if (messageEvent.message.eventname == "update") 
+            {
+                forceUpdater()
+            }
+            if (messageEvent.message.eventname == "autoUpdateTimer") 
+            {
+                autoUpdateTimer()
+            }
+            if (messageEvent.message.eventname == "updateScreenEnabled") 
+            {
+                showUpdateScreen("updateScreenEnabled")
+            }
+            if (messageEvent.message.eventname == "updateScreenDisabled") 
+            {
+                showUpdateScreen("updateScreenDisabled")
+            } 
+
+
+
             if (messageEvent.message.eventname === "download_video") 
             {
                 DownloadVideoZip(
