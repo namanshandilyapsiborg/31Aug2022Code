@@ -91,6 +91,8 @@ let publishChannel;            //===> Device Original mac ID
 let frontendChannel ;          //===> For only Frontend
 let a = [];
 
+let frontendstarted = false;
+
 //for live content
 let liveContentLink;
 let fileType;
@@ -194,7 +196,27 @@ pubnub.addListener({
             if (messageEvent.message.eventname == "get_device_file") 
             {
                 //console.log("Eventname => ", messageEvent.message.eventname);
-                getUserFilesName(messageEvent.message.filetype);
+
+                if(frontendstarted)
+                {
+                    getUserFilesName(messageEvent.message.filetype);
+                }
+                else{
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "resp_get_device_file",
+                                status: "Get Device File Failure",
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+                }
+
             }            
             //============================= Play/Pause ===========================================//
             if (messageEvent.message.eventname == "play") 
@@ -802,7 +824,7 @@ async function readFileNameAndTime (fileFolder, filetype) {
                 message: {
                     mac_id :  publishChannel,
                     eventname : "resp_get_device_file",
-                    status: "Get File Success",
+                    status: "Get Device File Success",
                 },
             },
             (status, response) => {
@@ -896,6 +918,7 @@ async function frontendStart()
                                 let {stdout} = exec("xdotool search --sync --onlyvisible --name firefox key F11")
                                 if(stdout)
                                 {
+                                    frontendstarted = true;
                                     console.log("//========= F11 Command has been executed ====//")
                                 }
                                 clearTimeout(timer3)
@@ -1207,7 +1230,7 @@ async function forceUpdater() {
                         ); 
                  }
             clearTimeout(updateTimer);
-            },15000)
+            },25000)
            
             
 
