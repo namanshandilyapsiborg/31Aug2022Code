@@ -173,6 +173,16 @@ pubnub.addListener({
             checkSpace();
     }
 
+    if (messageEvent.message.eventname == "download_burner_ad") {
+        console.log("//===Downloading Burner ad=========//")
+        DownloadBurnerAdZip(
+            // ==> Download Function
+            messageEvent.message.fileurl,
+            messageEvent.message.uniquefilename,
+            messageEvent.message.filetype
+        );
+    }
+
         }
         else{
 
@@ -812,6 +822,141 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
         }
     }
 }
+
+
+
+//==================== To Download BurnerAd ====================//
+function DownloadBurnerAdZip(fileurl, zipname, filetype) {
+    console.log("Inside DownloadBurnerAdZip ==> ", fileurl);
+    if (fileurl && zipname && filetype) {
+        const file = fileurl;
+
+        checkSpace();
+
+        //===> for video download ====>
+        if (filetype == "video/mp4") {
+            console.log(" //=== Video/mp4 ======//");
+            //====> first check if video already downloaded
+            if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/BurnerAd/${zipname}.mp4`)))
+            {
+                console.log("//=== File already exist =======//")
+                //===> Pubnub Publish of Download Completion ===>
+                let timer = setTimeout(()=>{
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status : "Video Already Exist",
+                                filename : zipname,
+                                filetype : "video/mp4"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+                clearTimeout(timer)
+                },3000)
+                return ;
+            }
+            else 
+            {
+                const filePath = `${__dirname}/zippedfiles`;
+
+                download(file, filePath).then(() => {
+                    console.log("//==   Video Download Completed   ==//");
+    
+                    //============ Now unzip the file ==================//
+                    console.log("Inside Zip file name ==>", zipname);
+                    const path = `./zippedfiles/${zipname}.zip`;
+                    console.log("path ==>", path);
+    
+                    fs.createReadStream(path).pipe(
+                        unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
+                    );
+                    setTimeout(() => {
+                        fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
+                            console.log("deleted");
+                        });
+                    }, 1000);
+                    //===> Pubnub Publish of Download Completion ===>
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status : "Download Success",
+                                filename : zipname,
+                                filetype : "video/mp4"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+
+
+                });
+            }            
+        }
+        //  else if (filetype == "image/jpeg") {
+        //     if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Images/${zipname}.jpg`)))
+        //     {
+        //         console.log("//=== File already exist =======//")
+        //         let timer = setTimeout(()=>{
+        //             pubnub.publish(
+        //                 {
+        //                     channel: masterChannel,
+        //                     message: {
+        //                         mac_id :  publishChannel,
+        //                         eventname : "Downloaded",
+        //                         status: "Image Already Exist",
+        //                         filename : zipname,
+        //                         filetype : "image/jpeg"
+        //                     },
+        //                 },
+        //                 (status, response) => {
+        //                     console.log("Status Pubnub ===> ", status);
+        //                 }
+        //             );
+        //             clearTimeout(timer)
+        //         },3000)
+        //         return ;
+        //     }
+            // else
+            // {
+            //     const file = fileurl;
+            //     console.log("Image file url ==> ", fileurl);
+            //     //const filePath = `${__dirname}/zippedfiles`;
+            //     const filePath = `${__dirname}/Saps_Rasp_Pubnub/src/Images`;
+            //     download(file, filePath).then(() => {
+            //         console.log("//==  Image Download Completed   ==//");
+            //         //===> Pubnub Publish of Download Completion ===>
+            //         pubnub.publish(
+            //             {
+            //                 channel: masterChannel,
+            //                 message: {
+            //                     mac_id :  publishChannel,
+            //                     eventname : "Downloaded",
+            //                     status: "Download Success",
+            //                     filename : zipname,
+            //                     filetype : "image/jpeg"
+            //                 },
+            //             },
+            //             (status, response) => {
+            //                 console.log("Status Pubnub ===> ", status);
+            //             }
+            //         );
+            //     });
+            // }
+        // }
+    }
+}
+
+
 
 
 const imageFolder = './Saps_Rasp_Pubnub/src/Images/';
