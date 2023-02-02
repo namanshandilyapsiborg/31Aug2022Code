@@ -655,6 +655,20 @@ async function showUpdateScreen(eventname)
                                console.log("Status Pubnub ===> ", status);
                            }
                        );
+
+                       pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "updatescreenresp",
+                                status : "started"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
                    }  
                 }
                 update_screen = true;
@@ -1393,6 +1407,20 @@ async function forceUpdater() {
                                 console.log("Status Pubnub ===> ", status);
                             }
                         ); 
+
+                        pubnub.publish(
+                            {
+                                channel: masterChannel,
+                                message: {
+                                    mac_id :  publishChannel,
+                                    eventname : "updateresp",
+                                    status : "started"
+                                },
+                            },
+                            (status, response) => {
+                                console.log("Status Pubnub ===> ", status);
+                            }
+                        );    
                  }
             clearTimeout(updateTimer);
             },25000)
