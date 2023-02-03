@@ -96,6 +96,7 @@ let frontendstarted = false;
 //for live content
 let liveContentLink;
 let fileType;
+let burnerad;
 
 
 
@@ -502,8 +503,11 @@ function PlayPauseVideo(data)
         console.log("Clearing timer for photo in stop function");
         clearInterval(timer);
 
+        
+        console.log("Burner ad list----->",burnerad);
+
         liveContentLink = null;
-        fileType = null;
+        fileType = "burnerad";
         if(frontendChannel)
         {
            pubnub.publish(
@@ -537,6 +541,8 @@ function PlayPauseVideo(data)
     }
    
 }
+
+
 
 
 // let timer = setInterval(click_photo, 5000);
@@ -1148,6 +1154,7 @@ function DownloadBurnerAdZip(fileurl, zipname, filetype) {
 
 const imageFolder = './Saps_Rasp_Pubnub/src/Images/';
 const videoFolder = './Saps_Rasp_Pubnub/src/Videos/';
+const burnarAdFolder = './Saps_Rasp_Pubnub/src/BurnerAd/';
 
 // function createdDate (fileFolder, file) {  
 //   const { birthtime } = fs.statSync(`${fileFolder}${file}`)
@@ -1204,6 +1211,12 @@ async function getUserFilesName(filetype) {
 
 }
 
+async function getBurnerAdFileName(fileFolder)
+{
+    burnerad = await fs.promises.readdir(fileFolder)
+}
+
+getBurnerAdFileName(burnarAdFolder);
 
 
 // async function sendFileNameToServer(fileName, fileTime){

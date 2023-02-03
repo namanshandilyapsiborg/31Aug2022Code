@@ -353,6 +353,30 @@ function App() {
                              </>
                               )}
 
+                              {/* {----------For Burner Ad----------------} */}
+
+                              {filetype && filetype == "burnerad" && (
+                                <>
+                                  <video
+                                    style={{
+                                      objectFit: "contain",
+                                      minHeight: "100%",
+                                      minWidth: "100%",
+                                      height: "100%",
+                                      width: "100%",
+                                    }}
+                                    controls
+                                    loop
+                                    autoPlay
+                                    muted={true}
+                                    src={require(`./BurnerAd/${videoname}.mp4`)}
+                                    type="video/mp4"
+                                  ></video>
+                                </>
+                              )}    
+
+                            {/* {----------For Burner Ad----------------} */}
+
                               {/* <video
                           style={{
                             backgroundColor: "red",
