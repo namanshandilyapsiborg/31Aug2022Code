@@ -1167,8 +1167,8 @@ async function readFileNameAndTime (fileFolder, filetype) {
             fileType:filetype
         }
 
-        let resp = await axios.post("http://api.postmyad.ai/api/device/deviceGallery/deviceFiles", body)
-        console.log("response from sendPhotoToServer====>", resp.data)
+        let resp = await axios.post("http://api.postmyad.live/api/device/deviceGallery/deviceFiles", body)
+        console.log("response from readFileNameAndTime====>", resp.data)
 
         pubnub.publish(
             {
