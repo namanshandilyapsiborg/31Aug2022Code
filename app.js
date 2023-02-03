@@ -708,138 +708,6 @@ async function showUpdateScreen(eventname)
 
 
 //==================== To Download Video ====================//
-// function DownloadVideoZip(fileurl, zipname, filetype) {
-//     console.log("Inside DownloadVideoZip ==> ", fileurl);
-//     if (fileurl && zipname && filetype) {
-//         const file = fileurl;
-
-//         checkSpace();
-
-//         //===> for video download ====>
-//         if (filetype == "video/mp4") {
-//             console.log(" //=== Video/mp4 ======//");
-//             //====> first check if video already downloaded
-//             if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Videos/${zipname}.mp4`)))
-//             {
-//                 console.log("//=== File already exist =======//")
-//                 //===> Pubnub Publish of Download Completion ===>
-//                 let timer = setTimeout(()=>{
-//                     pubnub.publish(
-//                         {
-//                             channel: masterChannel,
-//                             message: {
-//                                 mac_id :  publishChannel,
-//                                 eventname : "Downloaded",
-//                                 status : "Video Already Exist",
-//                                 filename : zipname,
-//                                 filetype : "video/mp4"
-//                             },
-//                         },
-//                         (status, response) => {
-//                             console.log("Status Pubnub ===> ", status);
-//                         }
-//                     );
-//                 clearTimeout(timer)
-//                 },3000)
-//                 return ;
-//             }
-//             else 
-//             {
-//                 const filePath = `${__dirname}/zippedfiles`;
-
-//                 download(file, filePath).then(() => {
-//                     console.log("//==   Video Download Completed   ==//");
-    
-//                     //============ Now unzip the file ==================//
-//                     console.log("Inside Zip file name ==>", zipname);
-//                     const path = `./zippedfiles/${zipname}.zip`;
-//                     console.log("path ==>", path);
-    
-//                     fs.createReadStream(path).pipe(
-//                         unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
-//                     );
-//                     setTimeout(() => {
-//                         fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
-//                             console.log("deleted");
-//                         });
-//                     }, 1000);
-//                     //===> Pubnub Publish of Download Completion ===>
-//                     pubnub.publish(
-//                         {
-//                             channel: masterChannel,
-//                             message: {
-//                                 mac_id :  publishChannel,
-//                                 eventname : "Downloaded",
-//                                 status : "Download Success",
-//                                 filename : zipname,
-//                                 filetype : "video/mp4"
-//                             },
-//                         },
-//                         (status, response) => {
-//                             console.log("Status Pubnub ===> ", status);
-//                         }
-//                     );
-
-
-//                 });
-//             }            
-//         } else if (filetype == "image/jpeg") {
-//             if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Images/${zipname}.jpg`)))
-//             {
-//                 console.log("//=== File already exist =======//")
-//                 let timer = setTimeout(()=>{
-//                     pubnub.publish(
-//                         {
-//                             channel: masterChannel,
-//                             message: {
-//                                 mac_id :  publishChannel,
-//                                 eventname : "Downloaded",
-//                                 status: "Image Already Exist",
-//                                 filename : zipname,
-//                                 filetype : "image/jpeg"
-//                             },
-//                         },
-//                         (status, response) => {
-//                             console.log("Status Pubnub ===> ", status);
-//                         }
-//                     );
-//                     clearTimeout(timer)
-//                 },3000)
-//                 return ;
-//             }
-//             else
-//             {
-//                 const file = fileurl;
-//                 console.log("Image file url ==> ", fileurl);
-//                 //const filePath = `${__dirname}/zippedfiles`;
-//                 const filePath = `${__dirname}/Saps_Rasp_Pubnub/src/Images`;
-//                 download(file, filePath).then(() => {
-//                     console.log("//==  Image Download Completed   ==//");
-//                     //===> Pubnub Publish of Download Completion ===>
-//                     pubnub.publish(
-//                         {
-//                             channel: masterChannel,
-//                             message: {
-//                                 mac_id :  publishChannel,
-//                                 eventname : "Downloaded",
-//                                 status: "Download Success",
-//                                 filename : zipname,
-//                                 filetype : "image/jpeg"
-//                             },
-//                         },
-//                         (status, response) => {
-//                             console.log("Status Pubnub ===> ", status);
-//                         }
-//                     );
-//                 });
-//             }
-//         }
-//     }
-// }
-
-
-
-
 function DownloadVideoZip(fileurl, zipname, filetype) {
     console.log("Inside DownloadVideoZip ==> ", fileurl);
     if (fileurl && zipname && filetype) {
@@ -879,46 +747,41 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
             {
                 const filePath = `${__dirname}/zippedfiles`;
 
-
-
-                downloadFile(file, filePath);
-                
-
-                // download(file, filePath).then(() => {
-                //     console.log("//==   Video Download Completed   ==//");
+                download(file, filePath).then(() => {
+                    console.log("//==   Video Download Completed   ==//");
     
-                //     //============ Now unzip the file ==================//
-                //     console.log("Inside Zip file name ==>", zipname);
-                //     const path = `./zippedfiles/${zipname}.zip`;
-                //     console.log("path ==>", path);
+                    //============ Now unzip the file ==================//
+                    console.log("Inside Zip file name ==>", zipname);
+                    const path = `./zippedfiles/${zipname}.zip`;
+                    console.log("path ==>", path);
     
-                //     fs.createReadStream(path).pipe(
-                //         unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
-                //     );
-                //     setTimeout(() => {
-                //         fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
-                //             console.log("deleted");
-                //         });
-                //     }, 1000);
-                //     //===> Pubnub Publish of Download Completion ===>
-                //     pubnub.publish(
-                //         {
-                //             channel: masterChannel,
-                //             message: {
-                //                 mac_id :  publishChannel,
-                //                 eventname : "Downloaded",
-                //                 status : "Download Success",
-                //                 filename : zipname,
-                //                 filetype : "video/mp4"
-                //             },
-                //         },
-                //         (status, response) => {
-                //             console.log("Status Pubnub ===> ", status);
-                //         }
-                //     );
+                    fs.createReadStream(path).pipe(
+                        unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
+                    );
+                    setTimeout(() => {
+                        fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
+                            console.log("deleted");
+                        });
+                    }, 1000);
+                    //===> Pubnub Publish of Download Completion ===>
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status : "Download Success",
+                                filename : zipname,
+                                filetype : "video/mp4"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
 
 
-                // });
+                });
             }            
         } else if (filetype == "image/jpeg") {
             if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Images/${zipname}.jpg`)))
@@ -975,41 +838,178 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
 }
 
 
-function downloadFile(file , filePath){
-    // Save variable to know progress
-    var received_bytes = 0;
-    var total_bytes = 0;
 
-    var req = request({
-        method: 'GET',
-        uri: file
-    });
 
-    var out = fs.createWriteStream(filePath);
-    req.pipe(out);
+// function DownloadVideoZip(fileurl, zipname, filetype) {
+//     console.log("Inside DownloadVideoZip ==> ", fileurl);
+//     if (fileurl && zipname && filetype) {
+//         const file = fileurl;
 
-    req.on('response', function ( data ) {
-        // Change the total bytes value to get progress later.
-        total_bytes = parseInt(data.headers['content-length' ]);
-    });
+//         checkSpace();
 
-    req.on('data', function(chunk) {
-        // Update the received bytes
-        received_bytes += chunk.length;
+//         //===> for video download ====>
+//         if (filetype == "video/mp4") {
+//             console.log(" //=== Video/mp4 ======//");
+//             //====> first check if video already downloaded
+//             if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Videos/${zipname}.mp4`)))
+//             {
+//                 console.log("//=== File already exist =======//")
+//                 //===> Pubnub Publish of Download Completion ===>
+//                 let timer = setTimeout(()=>{
+//                     pubnub.publish(
+//                         {
+//                             channel: masterChannel,
+//                             message: {
+//                                 mac_id :  publishChannel,
+//                                 eventname : "Downloaded",
+//                                 status : "Video Already Exist",
+//                                 filename : zipname,
+//                                 filetype : "video/mp4"
+//                             },
+//                         },
+//                         (status, response) => {
+//                             console.log("Status Pubnub ===> ", status);
+//                         }
+//                     );
+//                 clearTimeout(timer)
+//                 },3000)
+//                 return ;
+//             }
+//             else 
+//             {
+//                 const filePath = `${__dirname}/zippedfiles`;
 
-        showProgress(received_bytes, total_bytes);
-    });
 
-    req.on('end', function() {
-        alert("File succesfully downloaded");
-    });
-}
 
-function showProgress(received,total){
-    var percentage = (received * 100) / total;
-    console.log(percentage + "% | " + received + " bytes out of " + total + " bytes.");
-    // 50% | 50000 bytes received out of 100000 bytes.
-}
+//                 downloadFile(file, filePath);
+                
+
+//                 // download(file, filePath).then(() => {
+//                 //     console.log("//==   Video Download Completed   ==//");
+    
+//                 //     //============ Now unzip the file ==================//
+//                 //     console.log("Inside Zip file name ==>", zipname);
+//                 //     const path = `./zippedfiles/${zipname}.zip`;
+//                 //     console.log("path ==>", path);
+    
+//                 //     fs.createReadStream(path).pipe(
+//                 //         unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
+//                 //     );
+//                 //     setTimeout(() => {
+//                 //         fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
+//                 //             console.log("deleted");
+//                 //         });
+//                 //     }, 1000);
+//                 //     //===> Pubnub Publish of Download Completion ===>
+//                 //     pubnub.publish(
+//                 //         {
+//                 //             channel: masterChannel,
+//                 //             message: {
+//                 //                 mac_id :  publishChannel,
+//                 //                 eventname : "Downloaded",
+//                 //                 status : "Download Success",
+//                 //                 filename : zipname,
+//                 //                 filetype : "video/mp4"
+//                 //             },
+//                 //         },
+//                 //         (status, response) => {
+//                 //             console.log("Status Pubnub ===> ", status);
+//                 //         }
+//                 //     );
+
+
+//                 // });
+//             }            
+//         } else if (filetype == "image/jpeg") {
+//             if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Images/${zipname}.jpg`)))
+//             {
+//                 console.log("//=== File already exist =======//")
+//                 let timer = setTimeout(()=>{
+//                     pubnub.publish(
+//                         {
+//                             channel: masterChannel,
+//                             message: {
+//                                 mac_id :  publishChannel,
+//                                 eventname : "Downloaded",
+//                                 status: "Image Already Exist",
+//                                 filename : zipname,
+//                                 filetype : "image/jpeg"
+//                             },
+//                         },
+//                         (status, response) => {
+//                             console.log("Status Pubnub ===> ", status);
+//                         }
+//                     );
+//                     clearTimeout(timer)
+//                 },3000)
+//                 return ;
+//             }
+//             else
+//             {
+//                 const file = fileurl;
+//                 console.log("Image file url ==> ", fileurl);
+//                 //const filePath = `${__dirname}/zippedfiles`;
+//                 const filePath = `${__dirname}/Saps_Rasp_Pubnub/src/Images`;
+//                 download(file, filePath).then(() => {
+//                     console.log("//==  Image Download Completed   ==//");
+//                     //===> Pubnub Publish of Download Completion ===>
+//                     pubnub.publish(
+//                         {
+//                             channel: masterChannel,
+//                             message: {
+//                                 mac_id :  publishChannel,
+//                                 eventname : "Downloaded",
+//                                 status: "Download Success",
+//                                 filename : zipname,
+//                                 filetype : "image/jpeg"
+//                             },
+//                         },
+//                         (status, response) => {
+//                             console.log("Status Pubnub ===> ", status);
+//                         }
+//                     );
+//                 });
+//             }
+//         }
+//     }
+// }
+
+
+// function downloadFile(file , filePath){
+//     // Save variable to know progress
+//     var received_bytes = 0;
+//     var total_bytes = 0;
+
+//     var req = request({
+//         method: 'GET',
+//         uri: file
+//     });
+
+//     var out = fs.createWriteStream(filePath);
+//     req.pipe(out);
+
+//     req.on('response', function ( data ) {
+//         // Change the total bytes value to get progress later.
+//         total_bytes = parseInt(data.headers['content-length' ]);
+//     });
+
+//     req.on('data', function(chunk) {
+//         // Update the received bytes
+//         received_bytes += chunk.length;
+
+//         showProgress(received_bytes, total_bytes);
+//     });
+
+//     req.on('end', function() {
+//         alert("File succesfully downloaded");
+//     });
+// }
+
+// function showProgress(received,total){
+//     var percentage = (received * 100) / total;
+//     console.log(percentage + "% | " + received + " bytes out of " + total + " bytes.");
+//     // 50% | 50000 bytes received out of 100000 bytes.
+// }
 
 
 //==================== To Download BurnerAd ====================//
