@@ -1428,29 +1428,36 @@ parser.on("data", (data) => {
 
     if (data.includes("check_hang")) {
         blinkLED();
-        let timer = setInterval(blinkLED, 250);
-        setTimeout(() => {
-            endBlink();
-            clearInterval(timer);
-        }, 5000);
+        // let timer = setInterval(blinkLED, 250);
+        // setTimeout(() => {
+        //     endBlink();
+        //     clearInterval(timer);
+        // }, 5000);
 
-        const child = exec(
-            "ping -c 5 www.google.com",
-            function (error, stdout, stderr) {
-                if (error !== null) {
-                    console.log("Not available");
-                } else {
-                    console.log("Available");
-                }
+        // const child = exec(
+        //     "ping -c 5 www.google.com",
+        //     function (error, stdout, stderr) {
+        //         if (error !== null) {
+        //             console.log("Not available");
+        //         } else {
+        //             console.log("Available");
+        //         }
 
-                port.write("pi_ok", function (err) {
-                    if (err) {
-                        return console.log("Error on Write: ", err.message);
-                    }
-                    console.log("message written");
-                });
+        //         port.write("pi_ok", function (err) {
+        //             if (err) {
+        //                 return console.log("Error on Write: ", err.message);
+        //             }
+        //             console.log("message written");
+        //         });
+        //     }
+        // );
+
+        port.write("pi_ok", function (err) {
+            if (err) {
+                return console.log("Error on Write: ", err.message);
             }
-        );
+            console.log("message written");
+    });
     }
 
     if (data.includes("get_ip")) {
