@@ -215,6 +215,17 @@ pubnub.addListener({
                     messageEvent.message.filetype
                 );
             }
+
+            if (messageEvent.message.eventname == "download_burner_ad") {
+              console.log("//===Downloading Burner ad=========//")
+              DownloadBurnerAdZip(
+                  // ==> Download Function
+                  messageEvent.message.fileurl,
+                  messageEvent.message.uniquefilename,
+                  messageEvent.message.filetype
+              );
+          }
+
             if (messageEvent.message.eventname == "delete_user_file") 
             {
                 //console.log("Eventname => ", messageEvent.message.eventname);
