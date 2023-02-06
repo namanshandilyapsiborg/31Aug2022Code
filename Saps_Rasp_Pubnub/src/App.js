@@ -120,6 +120,7 @@ function App() {
           console.log("Video link ==> ", message.filetype);
           setVideoname(message.filename);
         }
+
         setDisplaytype(message.displaytype); //==> "fullscreen",  "quadrant"
         setFullscreenvideostatus(true);
         setFiletype(message.filetype);
@@ -127,7 +128,14 @@ function App() {
         //setFullscreenvideotag(message.filename);
       }
     } else if (message.eventname == "stop") {
-      if (message.displaytype == "fullscreen") {
+      if(message.filetype == "burnerad"){
+        console.log("file type burneraddddddddddddddddddddddd");
+        setVideoname(message.filename);
+        setDisplaytype(message.displaytype); //==> "fullscreen",  "quadrant"
+        setFullscreenvideostatus(true);
+        setFiletype(message.filetype);
+      }
+      else {
         setDisplaytype(null);
         setFullscreenvideostatus(false);
         setVideolink("");
@@ -357,6 +365,7 @@ function App() {
 
                               {filetype && filetype == "burnerad" && (
                                 <>
+                                {console.log("burned player")}
                                   <video
                                     style={{
                                       objectFit: "contain",
@@ -369,7 +378,7 @@ function App() {
                                     loop
                                     autoPlay
                                     muted={true}
-                                    src={require(`./BurnerAd/${videoname}.mp4`)}
+                                    src={require(`./BurnerAd/${videoname}`)}
                                     type="video/mp4"
                                   ></video>
                                 </>
@@ -422,7 +431,7 @@ function App() {
                                 }}
                                 src={SapsPurple}
                               />
-                              <h1>NO VIDEO SOURCE</h1>
+                              {/* <h1>NO VIDEO SOURCE</h1> */}
                             </div>{" "}
                           </>
                         )}
@@ -473,7 +482,7 @@ function App() {
                         }}
                         src={SapsPurple}
                       />
-                      <h1>NO VIDEO SOURCE</h1>
+                      {/* <h1>NO VIDEO SOURCE</h1> */}
                     </div>
                   </>
                 )}

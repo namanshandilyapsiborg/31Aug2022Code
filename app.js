@@ -506,8 +506,11 @@ function PlayPauseVideo(data)
         
         console.log("Burner ad list----->",burnerad);
 
+        const random = Math.floor(Math.random()*burnerad.length)
+
         liveContentLink = null;
-        fileType = "burnerad";
+        data["filetype"] = "burnerad";
+        data["filename"] = burnerad[random];
         if(frontendChannel)
         {
            pubnub.publish(
@@ -1208,6 +1211,10 @@ async function getUserFilesName(filetype) {
     {
         await readFileNameAndTime (imageFolder, filetype)
     }
+    else if(filetype === "burnerad")
+    {
+        await readFileNameAndTime (burnarAdFolder, filetype)
+    }
 
 }
 
@@ -1251,6 +1258,11 @@ function DeleteUserFiles(uniquefilename, filetype) {
                     ? path.join(
                         __dirname,
                         `/Saps_Rasp_Pubnub/src/Images/${uniquefilename}.jpg`
+                    )
+                    : filetype && filetype == "burnerad"
+                    ? path.join(
+                        __dirname,
+                        `/Saps_Rasp_Pubnub/src/BurnerAd/${uniquefilename}.mp4`
                     )
                     : null;
         console.log("path == >", path1);
