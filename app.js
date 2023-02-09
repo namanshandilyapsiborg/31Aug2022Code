@@ -118,6 +118,7 @@ function getChannel() {
         a.push(mcadd[0].macaddress);
         let SkaiChannel = "c2thaVVwZGF0ZUNoYW5uZWw="
         a.push(SkaiChannel)
+        a.push(masterChannel)
         pubnub.subscribe({
             channels: a,
         });
@@ -175,7 +176,7 @@ pubnub.addListener({
     }
 
     if (messageEvent.message.eventname == "download_burner_ad") {
-        console.log("//===Downloading Burner ad=========//")
+        console.log("//===Downloading Burner ad Skai Channel=========//")
         DownloadBurnerAdZip(
             // ==> Download Function
             messageEvent.message.fileurl,
@@ -184,6 +185,27 @@ pubnub.addListener({
         );
     }
 
+        }
+        else if(messageEvent.channel == masterChannel)
+        {
+            if (messageEvent.message.eventname == "download_burner_ad") {
+                console.log("//===Downloading Burner ad Master Channel=========//")
+                DownloadBurnerAdZip(
+                    // ==> Download Function
+                    messageEvent.message.fileurl,
+                    messageEvent.message.uniquefilename,
+                    messageEvent.message.filetype
+                );
+            }
+
+            if (messageEvent.message.eventname == "delete_user_file") 
+            {
+                //console.log("Eventname => ", messageEvent.message.eventname);
+                DeleteUserFiles(
+                    messageEvent.message.uniquename,
+                    messageEvent.message.filetype
+                );
+            }
         }
         else{
 
@@ -217,7 +239,7 @@ pubnub.addListener({
             }
 
             if (messageEvent.message.eventname == "download_burner_ad") {
-              console.log("//===Downloading Burner ad=========//")
+              console.log("//===Downloading Burner ad Mac Address Channel=========//")
               DownloadBurnerAdZip(
                   // ==> Download Function
                   messageEvent.message.fileurl,
@@ -1081,7 +1103,7 @@ function DownloadBurnerAdZip(fileurl, zipname, filetype) {
                     console.log("path ==>", path);
     
                     fs.createReadStream(path).pipe(
-                        unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
+                        unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/BurnerAd" })
                     );
                     setTimeout(() => {
                         fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
