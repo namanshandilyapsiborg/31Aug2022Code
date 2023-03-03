@@ -201,6 +201,12 @@ async function adlistner() {
                 {
                     forceUpdater()
                 }
+
+                if (messageEvent.message.eventname == "autoupdate") 
+                {
+                    autoUpdater()
+                }
+
                 if (messageEvent.message.eventname == "autoUpdateTimer") 
                 {
                     autoUpdateTimer()
@@ -391,7 +397,7 @@ async function restart() {
 
         restartstatus();
         checkSpace();
-        
+
     }
 
 }
@@ -1844,6 +1850,123 @@ parser.on("data", (data) => {
 
 //================================== Git Code Updater ========================================//
 async function forceUpdater() {
+    console.log("//========================== ForceUpdater func() =========================//")
+    // let versionChecker = await updater.compareVersions();
+    // console.log("version Checker value ===> ", versionChecker)
+    // if (versionChecker["remoteVersion"] && versionChecker.currentVersion != versionChecker.remoteVersion) {
+        console.log("//=== Verisons are not same ===//")
+
+        let data = {
+            eventname : "play",
+            filename : "updating",
+            displaytype : "fullscreen",
+            filetype : "updating"
+        }
+        pubnub.publish(
+                {
+                    channel: frontendChannel,
+                    message: data,
+                },
+                (status, response) => {
+                    console.log("Status Pubnub ===> ", status);
+                }
+            ); 
+
+        console.log("Clearing timer for BurnerAd in F11 Function function");
+        clearInterval(timer_burnerad);
+
+        let updateStatus = updater.forceUpdate();
+
+        // let updateStatus = await updater.autoUpdate();
+
+        if(updateStatus)
+        {
+            //======> For updating the Frontend Screen
+           let updateTimer =  setTimeout(()=>{
+                if(frontendChannel)
+                {
+                     let data = {
+                        eventname : "play",
+                        filename : "updating",
+                        displaytype : "fullscreen",
+                        filetype : "updating"
+                    }
+                    pubnub.publish(
+                            {
+                                channel: frontendChannel,
+                                message: data,
+                            },
+                            (status, response) => {
+                                console.log("Status Pubnub ===> ", status);
+                            }
+                        ); 
+
+                        pubnub.publish(
+                            {
+                                channel: masterChannel,
+                                message: {
+                                    mac_id :  publishChannel,
+                                    eventname : "updateresp",
+                                    status : "started"
+                                },
+                            },
+                            (status, response) => {
+                                console.log("Status Pubnub ===> ", status);
+                            }
+                        );    
+                 }
+            clearTimeout(updateTimer);
+            },25000)
+           
+            
+
+            let timer = setTimeout(() => {
+                const child = spawn('npm i', {
+                    stdio: 'inherit',
+                    shell: true,
+                    cwd: './'
+                })
+    
+                child.on('close', (code) => {               
+                    console.log(`Backend Node modules ===>  ${code}`);
+                let child2 = spawn('npm i', {
+                        stdio: 'inherit',
+                        shell: true,
+                        cwd: './Saps_Rasp_Pubnub'
+                    })
+    
+                child2.on('close', (code)=>{
+                    
+                    console.log("//==== Fronted Node Modules ===//")
+
+                    execShellCommand().then(() => {
+                        exec("pkill -f firefox")
+                        setTimeout(()=>{
+                            console.log("//=============== REBOOTING ================//")
+                            exec("sudo reboot");
+                        },50000)
+                    });                    
+                    // exec("pkill -f firefox")
+                    // setTimeout(()=>{
+                    //     console.log("//=============== REBOOTING ================//")
+                    //     exec("sudo reboot");
+                    // },10000)
+                })    
+                });
+                console.log("//====== Timer Completed =====//")
+                clearTimeout(timer)
+            }, 5*60000)    ///===> timer for reboot ==>  5 min
+        }
+    // }
+    // else if (versionChecker.upToDate == true) {
+    //     console.log("//==== Version is UpDated ===//")
+    //     return;
+    // }
+}
+
+
+
+async function autoUpdater() {
     console.log("//========================== ForceUpdater func() =========================//")
     let versionChecker = await updater.compareVersions();
     console.log("version Checker value ===> ", versionChecker)
