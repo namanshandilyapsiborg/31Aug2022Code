@@ -125,8 +125,8 @@ let burnerad;
 
 
 //========================= Getting MAcID ======================//
-function getChannel() {
-    if (fs.existsSync("./realmacadd.json") && fs.existsSync("./frontendMac.json") ) {
+async function getChannel() {
+    if (await fs.existsSync("./realmacadd.json") && await fs.existsSync("./frontendMac.json") ) {
         console.log("//=== macadress Channel exist ==//");
         let data = fs.readFileSync("./realmacadd.json", "utf-8");
         //console.log("MAC id inside mac address json file ==> ", JSON.parse(data));
@@ -169,71 +169,62 @@ function getChannel() {
     }
 }
 
-getChannel()
+ getChannel()
 
 //========================= PUBNUB LISTENER ====================//
-pubnub.addListener({
-    status: function (statusEvent) {
-        if (statusEvent.category === "PNNetworkDownCategory") {
-            console.log("PNNetworkDownCategory ===> ", statusEvent.category);
-            pubnub.reconnect()
-        }
-        if (statusEvent.category === "PNConnectedCategory") {
-            console.log("statusEvent ===> ", statusEvent.category);
-        } else {
-            console.log("//== Connection failed backend ===//");
-            // pubnub.reconnect();
-        }
-    },
-    category: function (e) {
-        console.log(e.category === "PNNetworkDownCategory");
-    },
-    message: function (messageEvent) {
-        console.log("Message From Pubnub ===> ", messageEvent.message);
-        if(messageEvent.channel == "c2thaVVwZGF0ZUNoYW5uZWw=")
-        {
-        //=====================================================================//
-        if (messageEvent.message.eventname == "update") 
-        {
-            forceUpdater()
-        }
-        if (messageEvent.message.eventname == "autoUpdateTimer") 
-        {
-            autoUpdateTimer()
-        }
-        if (messageEvent.message.eventname == "updateScreenEnabled") 
-        {
-            showUpdateScreen("updateScreenEnabled")
-        }
-        if (messageEvent.message.eventname == "updateScreenDisabled") 
-        {
-            showUpdateScreen("updateScreenDisabled")
-        }    
-        if (messageEvent.message.eventname == "force reboot") 
-        {
-            console.log("//=== Rebooting ForceFully =========//")
-            exec("sudo reboot")
-        }
-        if (messageEvent.message.eventname == "space available") {
-            console.log("//===Checking Disk Space =========//")
-            checkSpace();
-    }
 
-    if (messageEvent.message.eventname == "download_burner_ad") {
-        console.log("//===Downloading Burner ad Skai Channel=========//")
-        DownloadBurnerAdZip(
-            // ==> Download Function
-            messageEvent.message.fileurl,
-            messageEvent.message.uniquefilename,
-            messageEvent.message.filetype
-        );
-    }
+async function adlistner() {
+    if (await fs.existsSync("./realmacadd.json") && await fs.existsSync("./frontendMac.json") ) {
 
-        }
-        else if(messageEvent.channel == masterChannel)
-        {
+        pubnub.addListener({
+            status: function (statusEvent) {
+                if (statusEvent.category === "PNNetworkDownCategory") {
+                    console.log("PNNetworkDownCategory ===> ", statusEvent.category);
+                    pubnub.reconnect()
+                }
+                if (statusEvent.category === "PNConnectedCategory") {
+                    console.log("statusEvent ===> ", statusEvent.category);
+                } else {
+                    console.log("//== Connection failed backend ===//");
+                    // pubnub.reconnect();
+                }
+            },
+            category: function (e) {
+                console.log(e.category === "PNNetworkDownCategory");
+            },
+            message: function (messageEvent) {
+                console.log("Message From Pubnub ===> ", messageEvent.message);
+                if(messageEvent.channel == "c2thaVVwZGF0ZUNoYW5uZWw=")
+                {
+                //=====================================================================//
+                if (messageEvent.message.eventname == "update") 
+                {
+                    forceUpdater()
+                }
+                if (messageEvent.message.eventname == "autoUpdateTimer") 
+                {
+                    autoUpdateTimer()
+                }
+                if (messageEvent.message.eventname == "updateScreenEnabled") 
+                {
+                    showUpdateScreen("updateScreenEnabled")
+                }
+                if (messageEvent.message.eventname == "updateScreenDisabled") 
+                {
+                    showUpdateScreen("updateScreenDisabled")
+                }    
+                if (messageEvent.message.eventname == "force reboot") 
+                {
+                    console.log("//=== Rebooting ForceFully =========//")
+                    exec("sudo reboot")
+                }
+                if (messageEvent.message.eventname == "space available") {
+                    console.log("//===Checking Disk Space =========//")
+                    checkSpace();
+            }
+        
             if (messageEvent.message.eventname == "download_burner_ad") {
-                console.log("//===Downloading Burner ad Master Channel=========//")
+                console.log("//===Downloading Burner ad Skai Channel=========//")
                 DownloadBurnerAdZip(
                     // ==> Download Function
                     messageEvent.message.fileurl,
@@ -241,141 +232,169 @@ pubnub.addListener({
                     messageEvent.message.filetype
                 );
             }
-
-            if (messageEvent.message.eventname == "delete_user_file") 
-            {
-                //console.log("Eventname => ", messageEvent.message.eventname);
-                DeleteUserFiles(
-                    messageEvent.message.uniquename,
-                    messageEvent.message.filetype
-                );
-            }
-        }
-        else{
-
-            if (messageEvent.message.eventname == "update") 
-            {
-                forceUpdater()
-            }
-            if (messageEvent.message.eventname == "autoUpdateTimer") 
-            {
-                autoUpdateTimer()
-            }
-            if (messageEvent.message.eventname == "updateScreenEnabled") 
-            {
-                showUpdateScreen("updateScreenEnabled")
-            }
-            if (messageEvent.message.eventname == "updateScreenDisabled") 
-            {
-                showUpdateScreen("updateScreenDisabled")
-            } 
-
-
-
-            if (messageEvent.message.eventname === "download_video") 
-            {
-                DownloadVideoZip(
-                    // ==> Download Function
-                    messageEvent.message.fileurl,
-                    messageEvent.message.uniquefilename,
-                    messageEvent.message.filetype
-                );
-            }
-
-            if (messageEvent.message.eventname == "download_burner_ad") {
-              console.log("//===Downloading Burner ad Mac Address Channel=========//")
-              DownloadBurnerAdZip(
-                  // ==> Download Function
-                  messageEvent.message.fileurl,
-                  messageEvent.message.uniquefilename,
-                  messageEvent.message.filetype
-              );
-          }
-
-            if (messageEvent.message.eventname == "delete_user_file") 
-            {
-                //console.log("Eventname => ", messageEvent.message.eventname);
-                DeleteUserFiles(
-                    messageEvent.message.uniquename,
-                    messageEvent.message.filetype
-                );
-            }
-
-            if (messageEvent.message.eventname == "get_device_file") 
-            {
-                //console.log("Eventname => ", messageEvent.message.eventname);
-
-                if(frontendstarted)
+        
+                }
+                else if(messageEvent.channel == masterChannel)
                 {
-                    getUserFilesName(messageEvent.message.filetype);
+                    if (messageEvent.message.eventname == "download_burner_ad") {
+                        console.log("//===Downloading Burner ad Master Channel=========//")
+                        DownloadBurnerAdZip(
+                            // ==> Download Function
+                            messageEvent.message.fileurl,
+                            messageEvent.message.uniquefilename,
+                            messageEvent.message.filetype
+                        );
+                    }
+        
+                    if (messageEvent.message.eventname == "delete_user_file") 
+                    {
+                        //console.log("Eventname => ", messageEvent.message.eventname);
+                        DeleteUserFiles(
+                            messageEvent.message.uniquename,
+                            messageEvent.message.filetype
+                        );
+                    }
                 }
                 else{
-                    pubnub.publish(
-                        {
-                            channel: masterChannel,
-                            message: {
-                                mac_id :  publishChannel,
-                                eventname : "resp_get_device_file",
-                                status: "Get Device File Failure",
-                            },
-                        },
-                        (status, response) => {
-                            console.log("Status Pubnub ===> ", status);
-                        }
-                    );
-                }
-
-            }            
-            //============================= Play/Pause ===========================================//
-            if (messageEvent.message.eventname == "play") 
-            {
-                if(!update_screen)
-                {
-                    PlayPauseVideo(messageEvent.message)
-                }
-                
-            }   //=================== to stop the video =================>
-            if (messageEvent.message.eventname == "stop") {
-                if(!update_screen)
-                {
-                    PlayPauseVideo(messageEvent.message)
-                }
-                
-              }
-
-            if (messageEvent.message.eventname == "getlive") {
-                pubnub.publish(
+        
+                    if (messageEvent.message.eventname == "update") 
                     {
-                        channel: publishChannel,
-                        message: {
-                            mac_id :  publishChannel,
-                            eventname : "getlivelink",
-                            link : liveContentLink,
-                            fileType : fileType
-                        },
-                    },
-                    (status, response) => {
-                        console.log("Status Pubnub ===> ", status);
+                        forceUpdater()
                     }
-                );
-             }  
-           
-            if (messageEvent.message.eventname == "force reboot") {
-                console.log("//=== Rebooting ForceFully =========//")
-                exec("sudo reboot")
-            }
+                    if (messageEvent.message.eventname == "autoUpdateTimer") 
+                    {
+                        autoUpdateTimer()
+                    }
+                    if (messageEvent.message.eventname == "updateScreenEnabled") 
+                    {
+                        showUpdateScreen("updateScreenEnabled")
+                    }
+                    if (messageEvent.message.eventname == "updateScreenDisabled") 
+                    {
+                        showUpdateScreen("updateScreenDisabled")
+                    } 
+        
+        
+        
+                    if (messageEvent.message.eventname === "download_video") 
+                    {
+                        DownloadVideoZip(
+                            // ==> Download Function
+                            messageEvent.message.fileurl,
+                            messageEvent.message.uniquefilename,
+                            messageEvent.message.filetype
+                        );
+                    }
+        
+                    if (messageEvent.message.eventname == "download_burner_ad") {
+                      console.log("//===Downloading Burner ad Mac Address Channel=========//")
+                      DownloadBurnerAdZip(
+                          // ==> Download Function
+                          messageEvent.message.fileurl,
+                          messageEvent.message.uniquefilename,
+                          messageEvent.message.filetype
+                      );
+                  }
+        
+                    if (messageEvent.message.eventname == "delete_user_file") 
+                    {
+                        //console.log("Eventname => ", messageEvent.message.eventname);
+                        DeleteUserFiles(
+                            messageEvent.message.uniquename,
+                            messageEvent.message.filetype
+                        );
+                    }
+        
+                    if (messageEvent.message.eventname == "get_device_file") 
+                    {
+                        //console.log("Eventname => ", messageEvent.message.eventname);
+        
+                        if(frontendstarted)
+                        {
+                            getUserFilesName(messageEvent.message.filetype);
+                        }
+                        else{
+                            pubnub.publish(
+                                {
+                                    channel: masterChannel,
+                                    message: {
+                                        mac_id :  publishChannel,
+                                        eventname : "resp_get_device_file",
+                                        status: "Get Device File Failure",
+                                    },
+                                },
+                                (status, response) => {
+                                    console.log("Status Pubnub ===> ", status);
+                                }
+                            );
+                        }
+        
+                    }            
+                    //============================= Play/Pause ===========================================//
+                    if (messageEvent.message.eventname == "play") 
+                    {
+                        if(!update_screen)
+                        {
+                            PlayPauseVideo(messageEvent.message)
+                        }
+                        
+                    }   //=================== to stop the video =================>
+                    if (messageEvent.message.eventname == "stop") {
+                        if(!update_screen)
+                        {
+                            PlayPauseVideo(messageEvent.message)
+                        }
+                        
+                      }
+        
+                    if (messageEvent.message.eventname == "getlive") {
+                        pubnub.publish(
+                            {
+                                channel: publishChannel,
+                                message: {
+                                    mac_id :  publishChannel,
+                                    eventname : "getlivelink",
+                                    link : liveContentLink,
+                                    fileType : fileType
+                                },
+                            },
+                            (status, response) => {
+                                console.log("Status Pubnub ===> ", status);
+                            }
+                        );
+                     }  
+                   
+                    if (messageEvent.message.eventname == "force reboot") {
+                        console.log("//=== Rebooting ForceFully =========//")
+                        exec("sudo reboot")
+                    }
+        
+                    if (messageEvent.message.eventname == "space available") {
+                        console.log("//===Checking Disk Space =========//")
+                        checkSpace();
+                }
+                }  
+            },
+            presence: function (presenceEvent) {
+                console.log("Handle Presence ===> ", presenceEvent);
+            },
+        });
+    }
 
-            if (messageEvent.message.eventname == "space available") {
-                console.log("//===Checking Disk Space =========//")
-                checkSpace();
-        }
-        }  
-    },
-    presence: function (presenceEvent) {
-        console.log("Handle Presence ===> ", presenceEvent);
-    },
-});
+}
 
+adlistner()
+
+
+async function restart() {
+    if (await fs.existsSync("./realmacadd.json") && await fs.existsSync("./frontendMac.json") ) {
+
+        restartstatus();
+        checkSpace();
+        
+    }
+
+}
 
 function restartstatus()
 {
@@ -395,7 +414,7 @@ function restartstatus()
 }
 
 
-restartstatus();
+
 
 
 //=======> Checking DiskSpace=======>
@@ -438,7 +457,7 @@ function checkSpace()
 })
 }
 
-checkSpace();
+
 
 
 //===> To play Pause 
