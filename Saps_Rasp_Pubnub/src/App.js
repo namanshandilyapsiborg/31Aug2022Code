@@ -60,6 +60,7 @@ function App() {
 
   const [fullscreenvideotag, setFullscreenvideotag] = useState(null);
   const [videoname, setVideoname] = useState("");
+  const [burnerVideoname, setBurnerVideoname] = useState("");
   const [imagename, setImagename] = useState("");
   const [videotag, setVideotag] = useState(null);
   const [videotag1, setVideotag1] = useState(null);
@@ -130,7 +131,7 @@ function App() {
     } else if (message.eventname == "stop") {
       if(message.filetype == "burnerad"){
         console.log("file type burneraddddddddddddddddddddddd");
-        setVideoname(message.filename);
+        setBurnerVideoname(message.filename);
         setDisplaytype(message.displaytype); //==> "fullscreen",  "quadrant"
         setFullscreenvideostatus(true);
         setFiletype(message.filetype);
@@ -270,7 +271,7 @@ function App() {
                                 left: "0",
                               }}
                             >
-                              {filetype && filetype == "video/mp4" && (
+                               {filetype && filetype == "video/mp4" && videoname &&(
                                 <>
                                   <video
                                     style={{
@@ -295,7 +296,7 @@ function App() {
                                 </>
                               )}
 
-                              {filetype && filetype == "image/jpeg" && (
+                                {filetype && filetype == "image/jpeg" && imagename &&(
                                 <img
                                   style={{
                                     objectFit: "contain",
@@ -308,7 +309,7 @@ function App() {
                                     backgroundRepeat: "no-repeat",
                                   }}
                                   // src={SapsPurple}
-                                  src={require(`./Images/${imagename}.jpg`)}
+                                  src={require(`./images_ad/${imagename}.jpg`)}
 
                                   
                                 />
@@ -363,7 +364,7 @@ function App() {
 
                               {/* {----------For Burner Ad----------------} */}
 
-                              {filetype && filetype == "burnerad" && (
+                              {filetype && filetype == "burnerad" && burnerVideoname && (
                                 <>
                                 {console.log("burned player")}
                                   <video
