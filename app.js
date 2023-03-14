@@ -392,6 +392,43 @@ async function adlistner() {
 adlistner()
 
 
+function checkWifiConnection () {
+
+    return new Promise((resolve, reject) => {
+     exec("iwconfig", (error, stdout, stderr) => {
+      if (error) {
+       console.warn(error);
+      
+    }
+    // console.log("checkwifi ==>", typeof stdout)
+    let myPattern = new RegExp('(\\w*' + "Not-Associated" + '\\w*)', 'gi')
+    let matches = stdout.match(myPattern)
+
+    if (matches) {
+        // console.log("my pattern does exist")
+        exec("sudo rfkill unblock wifi")
+        exec("sudo ifconfig wlan0 up")
+        console.log("======== Wifi connection is turned ON ==========")
+        resolve(true)
+    }
+    reject("already connected")
+     });
+    });
+}
+
+
+checkWifiConnection().then ((data) => {
+setTimeout(async () => {
+    restart();
+    console.log("== connection done ==", data)
+}, 50000)
+
+}).catch((err) => {
+    restart();
+    console.log("== connection done ==", err)
+})
+
+
 async function restart() {
     if (await fs.existsSync("./realmacadd.json") && await fs.existsSync("./frontendMac.json") ) {
 
@@ -1571,7 +1608,7 @@ async function frontendStart()
                           
                         }
                             clearTimeout(timer2)
-                        }, 50000);
+                        }, 60000);
 
             // let timer2  = setTimeout(async() => {
             //                // exec("chromium-browser --app=http://www.localhost:3000/ --kiosk",(err,stdout , stderr)=>{
