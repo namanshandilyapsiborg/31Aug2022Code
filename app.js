@@ -79,8 +79,16 @@ var image;
 //Creates webcam instance
 
 var Webcam = NodeWebcam.create( opts );
+var cam = 14;
+// get web cam list
+function countwebCamList(){
+    Webcam.list(function(list){
+        console.log("============WEBCAM COUNT==========", list.length)
+        cam = list.length
+    })
+}
 
-
+countwebCamList();
 let masterChannel = "c3RvcmFnZS5zYXBzLm9uZQ=="           ///=====> For server Backend
 
 const config = {
@@ -507,6 +515,7 @@ function checkSpace()
 function PlayPauseVideo(data)
 {
     console.log("playPauseVideo func() ==> ", data)
+    countwebCamList()
 
     //for google vision api------------------------------------------
 
@@ -523,6 +532,8 @@ function PlayPauseVideo(data)
 
         liveContentLink = data.contentLink
         fileType = data.filetype
+        data["webcam"] = cam === 14 ? false : true
+        data["cameraEvent"] = "camera"
         if (data && data.filetype == "image/jpeg") 
         {
           console.log("Image name ==> ", data.filename);
@@ -607,6 +618,51 @@ function PlayPauseVideo(data)
 
           }
         }
+
+        if (data && data.filetype == "video/webm") 
+        {
+          console.log("Video name ==> ", data.filename);
+          if(fs.existsSync(path.join(__dirname ,`/Saps_Rasp_Pubnub/src/Videos/${data.filename}.webm` )))
+          {
+             console.log("//=== Yes Video exist ===//")
+             if(frontendChannel)
+             {
+                pubnub.publish(
+                    {
+                        channel: frontendChannel,
+                        message: data,
+                    },
+                    (status, response) => {
+                        console.log("Status Pubnub ===> ", status);
+                    }
+                );
+             }
+
+
+             pubnub.publish(
+                {
+                    channel: masterChannel,
+                    message: {
+                        mac_id :  publishChannel,
+                        eventname : "playresp",
+                        orderId : orderId,
+                        second : second,
+                        status : "played"
+                    },
+                },
+                (status, response) => {
+                    console.log("Status Pubnub ===> ", status);
+                }
+            );
+
+              // start timer to click photo
+              console.log("Starting timer for photo");
+              timer = setInterval(click_photo, 5000);          
+
+          }
+        }
+
+
         if (data && data.filetype == "url") 
         {
           console.log("Video link ==> ", data.filename);
@@ -650,6 +706,8 @@ function PlayPauseVideo(data)
     }
     else if(data.eventname == "stop")
     {
+        liveContentLink = null;
+
         console.log("Clearing timer for photo in stop function");
         clearInterval(timer);
 
@@ -969,7 +1027,76 @@ function DownloadVideoZip(fileurl, zipname, filetype) {
 
                 });
             }            
-        } else if (filetype == "image/jpeg") {
+        } 
+        else if (filetype == "video/webm") {
+            console.log(" //=== Video/webm ======//");
+            //====> first check if video already downloaded
+            if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/Videos/${zipname}.webm`)))
+            {
+                console.log("//=== File already exist =======//")
+                //===> Pubnub Publish of Download Completion ===>
+                let timer = setTimeout(()=>{
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status : "Video Already Exist",
+                                filename : zipname,
+                                filetype : "video/webm"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+                clearTimeout(timer)
+                },3000)
+                return ;
+            }
+            else 
+            {
+                const filePath = `${__dirname}/zippedfiles`;
+
+                download(file, filePath).then(() => {
+                    console.log("//==   Video Download Completed   ==//");
+    
+                    //============ Now unzip the file ==================//
+                    console.log("Inside Zip file name ==>", zipname);
+                    const path = `./zippedfiles/${zipname}.zip`;
+                    console.log("path ==>", path);
+    
+                    fs.createReadStream(path).pipe(
+                        unzipper.Extract({ path: "./Saps_Rasp_Pubnub/src/Videos" })
+                    );
+                    setTimeout(() => {
+                        fs.unlinkSync(`./zippedfiles/${zipname}.zip`, () => {
+                            console.log("deleted");
+                        });
+                    }, 1000);
+                    //===> Pubnub Publish of Download Completion ===>
+                    pubnub.publish(
+                        {
+                            channel: masterChannel,
+                            message: {
+                                mac_id :  publishChannel,
+                                eventname : "Downloaded",
+                                status : "Download Success",
+                                filename : zipname,
+                                filetype : "video/webm"
+                            },
+                        },
+                        (status, response) => {
+                            console.log("Status Pubnub ===> ", status);
+                        }
+                    );
+
+
+                });
+            }            
+        } 
+        else if (filetype == "image/jpeg") {
             if(fs.existsSync(path.join(__dirname , `/Saps_Rasp_Pubnub/src/images_ad/${zipname}.jpg`)))
             {
                 console.log("//=== File already exist =======//")
@@ -1410,11 +1537,17 @@ getBurnerAdFileName(burnarAdFolder);
 
 function playBurnerAd()
 {
+    countwebCamList();
+    console.log("return After Cam Count ===>", cam);
+
     if(!update_screen)
     {
         console.log("Burner ad list----->",burnerad.length);
 
         let data = {};
+
+        data["webcam"] = cam === 14 ? false : true
+        data["cameraEvent"] = "camera"
                                         
         if (burnerad.length > 0)
         {
@@ -1435,7 +1568,6 @@ function playBurnerAd()
                 },
                 (status, response) => {
                     console.log("Status Pubnub ===> ", status);
-                    burnerAdPlaying = true;
                 }
             );
             }
@@ -1455,13 +1587,85 @@ function playBurnerAd()
                     },
                     (status, response) => {
                         console.log("Status Pubnub ===> ", status);
+                        burnerAdPlaying = true;
                     }
                 );
                 }
             }
         }
+        else{
+            if(frontendChannel)
+            {
+            pubnub.publish(
+                {
+                    channel: frontendChannel,
+                    message: data,
+                },
+                (status, response) => {
+                    console.log("Status Pubnub ===> ", status);
+                }
+            );
+            }
+        }
     }
 }
+
+
+
+// function playBurnerAd()
+// {
+//     if(!update_screen)
+//     {
+//         console.log("Burner ad list----->",burnerad.length);
+
+//         let data = {};
+                                        
+//         if (burnerad.length > 0)
+//         {
+//             const random = Math.floor(Math.random()*burnerad.length)
+
+//             liveContentLink = null;
+//             data["filetype"] = "burnerad";
+//             data["filename"] = burnerad[random];
+//             data["eventname"] = "stop";
+//             data["displaytype"] = "fullscreen";
+
+//             if(frontendChannel)
+//             {
+//             pubnub.publish(
+//                 {
+//                     channel: frontendChannel,
+//                     message: data,
+//                 },
+//                 (status, response) => {
+//                     console.log("Status Pubnub ===> ", status);
+//                     burnerAdPlaying = true;
+//                 }
+//             );
+//             }
+//             else{
+//                 liveContentLink = null;
+//                 data["filetype"] = null;
+//                 data["filename"] = null;  
+//                 data["eventname"] = "stop";
+//                 data["displaytype"] = "fullscreen";
+
+//                 if(frontendChannel)
+//                 {
+//                 pubnub.publish(
+//                     {
+//                         channel: frontendChannel,
+//                         message: data,
+//                     },
+//                     (status, response) => {
+//                         console.log("Status Pubnub ===> ", status);
+//                     }
+//                 );
+//                 }
+//             }
+//         }
+//     }
+// }
 
 
 // async function sendFileNameToServer(fileName, fileTime){
@@ -1563,7 +1767,7 @@ async function frontendStart()
                                     frontendstarted = true;
                                     console.log("//========= F11 Command has been executed ====//")
 
-                                    console.log("Clearing timer for BurnerAd in play function");
+                                    console.log("Clearing timer for BurnerAd in F11 Function function");
                                     clearInterval(timer_burnerad);
 
                                     console.log("Burner ad list----->",burnerad.length);
@@ -1593,9 +1797,10 @@ async function frontendStart()
                                                }
                                            );
                                         }
-
-                                        timer_burnerad = setInterval(playBurnerAd, 30000);
+                                        
                                     }
+                                    console.log("Starting timer for BurnerAd in F11 Function function");
+                                        timer_burnerad = setInterval(playBurnerAd, 30000);
                                     // else{
                                     //     data["filetype"] = null;
                                     //     data["filename"] = null;  

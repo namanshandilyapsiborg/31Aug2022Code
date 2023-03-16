@@ -5,6 +5,10 @@ import { io } from "socket.io-client";
 import { useEffect, useState , useRef } from "react";
 import { VideoContext } from "./Context/VideoContext";
 import qrcode from "./Images/qrcode.png";
+
+import camera from "./Images/camera.png";
+import nocamera from "./Images/nocamera.png";
+
 import navbaricon from "./Images/navbaricon.png";
 // import SapsPurple from "./Images/SapsPurple.jpg";
 // import SapsPurple from "./Images/PostMyAddLogo.png";
@@ -71,6 +75,7 @@ function App() {
   const [online, setOnline] = useState(null);
   const [sensorval, setSensorval] = useState(true);
   const [playmode, setPlaymode] = useState(false);
+  const [cameraC, setCameraC] = useState(false);
   const vidRef = useRef();
 
   useEffect(() => {
@@ -108,6 +113,9 @@ function App() {
   const handleMessage = (event) => {
     const message = event.message;
     console.log("event message ==> ", message);
+    if (message.cameraEvent) {
+      setCameraC(message.webcam)
+    }
     if (message.eventname == "play") {
       if (message.displaytype == "fullscreen") {
         if (message.filetype == "image/jpeg") {
@@ -117,6 +125,10 @@ function App() {
           console.log("Video name ==> ", message.filetype);
           setVideoname(message.filename);
         }
+        else if (message.filetype == "video/webm") {
+          console.log("Video name ==> ", message.filetype);
+          setVideoname(message.filename);
+        }        
         else if (message.filetype == "url") {
           console.log("Video link ==> ", message.filetype);
           setVideoname(message.filename);
@@ -164,9 +176,19 @@ function App() {
     // }
   };
 
+
+
   return (
-    <>
-      {online === false ? (
+    <div  style={{ display: "flex", width: "100%"}}>
+      <div style={{position: "absolute",top: "10px", right: "10px"}}>  
+        { cameraC ?
+          <img src={camera}  /> :
+          <img src={nocamera}  />
+        }
+      </div>  
+
+      {
+      online === false ? (
         <>
           <div
             style={{
@@ -266,12 +288,12 @@ function App() {
                                 height: "100%",
                                 width: "100%",
                                 //backgroundColor : "red",
-                                position: "absolute",
+                                // position: "absolute",
                                 top: "0",
                                 left: "0",
                               }}
                             >
-                               {filetype && filetype == "video/mp4" && videoname &&(
+                              {filetype && filetype == "video/mp4" && videoname &&(
                                 <>
                                   <video
                                     style={{
@@ -281,7 +303,6 @@ function App() {
                                       minWidth: "100%",
                                       height: "100%",
                                       width: "100%",
-                                      // paddingtop: "56.25%",
                                     }}
                                     controls
                                     loop
@@ -296,7 +317,34 @@ function App() {
                                 </>
                               )}
 
-                                {filetype && filetype == "image/jpeg" && imagename &&(
+
+
+                              {filetype && filetype == "video/webm" && videoname &&(
+                                <>
+                                  <video
+                                    style={{
+                                      // backgroundColor: "red",
+                                      objectFit: "contain",
+                                      minHeight: "100%",
+                                      minWidth: "100%",
+                                      height: "100%",
+                                      width: "100%",
+                                    }}
+                                    controls
+                                    loop
+                                    //value={vidRef}
+                                    autoPlay
+                                    muted={true}
+                                    //muted={false}
+                                    //src={"http://localhost:8000/videos/surfing_720p.mp4"}
+                                    src={require(`./Videos/${videoname}.webm`)}
+                                    type="video/webm"
+                                  ></video>
+                                </>
+                              )}
+
+
+                              {filetype && filetype == "image/jpeg" && imagename &&(
                                 <img
                                   style={{
                                     objectFit: "contain",
@@ -305,13 +353,11 @@ function App() {
                                     height: "100%",
                                     width: "100%",
                                     backgroundSize: "contain",
-                                    // backgroundPosition: "",
+                                    backgroundPosition: "center",
                                     backgroundRepeat: "no-repeat",
                                   }}
                                   // src={SapsPurple}
                                   src={require(`./images_ad/${imagename}.jpg`)}
-
-                                  
                                 />
                               )}
 
@@ -354,8 +400,8 @@ function App() {
                                      backgroundRepeat: "no-repeat",
                                      borderRadius: "10px",
                                    }}
-                                   //src={require("./Images/post_my_add_update.gif")}
-                                   src={require("./Images/skai_update.gif")}
+                                   src={require("./Images/post_my_add_update.gif")}
+                                   //src={require("./Images/skai_update.gif")}
                                  />
                                  {/* <h1>UPDATING...</h1> */}
                                </div>{" "}
@@ -379,13 +425,13 @@ function App() {
                                     loop
                                     autoPlay
                                     muted={true}
-                                    src={require(`./BurnerAd/${videoname}`)}
+                                    src={require(`./BurnerAd/${burnerVideoname}`)}
                                     type="video/mp4"
                                   ></video>
                                 </>
                               )}    
 
-                            {/* {----------For Burner Ad----------------} */}
+                            {/* {----------For Burner Ad----------------} */}                              
 
                               {/* <video
                           style={{
@@ -409,6 +455,7 @@ function App() {
                           <>
                             <div
                               style={{
+                                objectFit: "contain",
                                 height: "100vh",
                                 width: "100%",
                                 color: "white",
@@ -422,13 +469,14 @@ function App() {
                             >
                               <img
                                 style={{
-                                  width: "1400px",
-                                  height: "400px",
-                                  marginBottom: "5px",
-                                  backgroundSize: "cover",
-                                  backgroundPosition: "center",
-                                  backgroundRepeat: "no-repeat",
-                                  borderRadius: "10px",
+                                  objectFit: "contain",
+                                    minHeight: "100%",
+                                    minWidth: "100%",
+                                    height: "100%",
+                                    width: "100%",
+                                    backgroundSize: "contain",
+                                    backgroundPosition: "center",
+                                    backgroundRepeat: "no-repeat",
                                 }}
                                 src={SapsPurple}
                               />
@@ -460,6 +508,7 @@ function App() {
                   <>
                     <div
                       style={{
+                        objectFit: "contain",
                         height: "100vh",
                         width: "100%",
                         color: "white",
@@ -473,16 +522,18 @@ function App() {
                     >
                       <img
                         style={{
-                          width: "1400px",
-                          height: "400px",
-                          marginBottom: "5px",
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          backgroundRepeat: "no-repeat",
-                          borderRadius: "10px",
+                          objectFit: "contain",
+                                    minHeight: "100%",
+                                    minWidth: "100%",
+                                    height: "100%",
+                                    width: "100%",
+                                    backgroundSize: "contain",
+                                    backgroundPosition: "center",
+                                    backgroundRepeat: "no-repeat",
                         }}
                         src={SapsPurple}
                       />
+                      
                       {/* <h1>NO VIDEO SOURCE</h1> */}
                     </div>
                   </>
@@ -492,8 +543,342 @@ function App() {
           </VideoContext.Provider>
         </>
       )}
-    </>
+    </div>
   );
 }
+
+
+
+//   return (
+//     <>
+//       {online === false ? (
+//         <>
+//           <div
+//             style={{
+//               height: "100vh",
+//               width: "100%",
+//               backgroundColor: "black",
+//               display: "flex",
+//               flexDirection: "column",
+//               justifyContent: "center",
+//               alignItems: "center",
+//             }}
+//           >
+//             <img
+//               style={{ width: "500px", height: "500px", marginBottom: "10px" }}
+//               src={qrcode}
+//             />
+//             <Typography style={{ color: "white", marginBottom: "15px" }}>
+//               NOT CONNECTED TO INTERNET{" "}
+//             </Typography>
+//             <Typography style={{ color: "white", marginBottom: "25px" }}>
+//               STEPS TO CONNECT TO WiFi{" "}
+//             </Typography>
+//             <Typography style={{ color: "white", marginBottom: "10px" }}>
+//               1. Press & Hold Button 4 On Device For 3 Seconds{" "}
+//             </Typography>
+//             <Typography style={{ color: "white", marginBottom: "10px" }}>
+//               2. Now Turn ON Your Mobile WiFi & Scan Your Device{" "}
+//             </Typography>
+//             <Typography style={{ color: "white", marginBottom: "10px" }}>
+//               3. Now Connect Your Mobile To Device
+//             </Typography>
+//             <Typography style={{ color: "white", marginBottom: "10px" }}>
+//               4. Now Scan the Upper QR Code And Open The URL Provided Into The Browser
+//             </Typography>
+//             <Typography style={{ color: "white", marginBottom: "10px" }}>
+//               5. Now Enter Credential of Your WiFi, And Press Connect
+//             </Typography>
+//           </div>
+//         </>
+//       ) : (
+//         <>
+//           <VideoContext.Provider value={{ displaytype }}>
+//             {showqrcode == true ? (
+//               <>
+//                 <div
+//                   style={{
+//                     height: "100vh",
+//                     width: "100%",
+//                     color: "white",
+//                     backgroundColor: "black",
+//                     fontSize: "0.8rem",
+//                     display: "flex",
+//                     flexDirection: "column",
+//                     justifyContent: "center",
+//                     alignItems: "center",
+//                     overflow : "hidden"
+//                   }}
+//                 >
+//                   <img
+//                     style={{
+//                       width: "500px",
+//                       height: "500px",
+//                       marginBottom: "5px",
+//                       backgroundSize: "cover",
+//                       backgroundPosition: "center",
+//                       backgroundRepeat: "no-repeat",
+//                       borderRadius: "10px",
+//                     }}
+//                     src={
+//                       showqrcode == true
+//                         ? require(`./Qrcode/qrcode.png`)
+//                         : SapsPurple
+//                     }
+//                   />
+//                   <h1>SCAN THE QR CODE TO ADD DEVICE</h1>
+//                 </div>
+//               </>
+//             ) : (
+//               <>
+//                 {
+//                 displaytype != null ? (
+//                   <>
+//                     {displaytype == "fullscreen" && fullscreenvideostatus && (
+//                       // <Display1screen
+//                       //   video={videolink}
+//                       //   video1status={fullscreenvideostatus}
+//                       //   fileName={fullscreenvideotag}
+//                       //   filenametype={filetype}
+//                       // />
+//                       <>
+//                         {fullscreenvideostatus == true &&
+//                         // fullscreenvideotag != null &&
+//                         filetype != null ? (
+//                           <>
+//                             <div
+//                               style={{
+//                                 height: "100%",
+//                                 width: "100%",
+//                                 //backgroundColor : "red",
+//                                 position: "absolute",
+//                                 top: "0",
+//                                 left: "0",
+//                               }}
+//                             >
+//                                {filetype && filetype == "video/mp4" && videoname &&(
+//                                 <>
+//                                   <video
+//                                     style={{
+//                                       // backgroundColor: "red",
+//                                       objectFit: "contain",
+//                                       minHeight: "100%",
+//                                       minWidth: "100%",
+//                                       height: "100%",
+//                                       width: "100%",
+//                                       // paddingtop: "56.25%",
+//                                     }}
+//                                     controls
+//                                     loop
+//                                     //value={vidRef}
+//                                     autoPlay
+//                                     muted={true}
+//                                     //muted={false}
+//                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
+//                                     src={require(`./Videos/${videoname}.mp4`)}
+//                                     type="video/mp4"
+//                                   ></video>
+//                                 </>
+//                               )}
+
+//                                 {filetype && filetype == "image/jpeg" && imagename &&(
+//                                 <img
+//                                   style={{
+//                                     objectFit: "contain",
+//                                     minHeight: "100%",
+//                                     minWidth: "100%",
+//                                     height: "100%",
+//                                     width: "100%",
+//                                     backgroundSize: "contain",
+//                                     // backgroundPosition: "",
+//                                     backgroundRepeat: "no-repeat",
+//                                   }}
+//                                   // src={SapsPurple}
+//                                   src={require(`./images_ad/${imagename}.jpg`)}
+
+                                  
+//                                 />
+//                               )}
+
+//                               {filetype && filetype == "url" && (
+//                                <ReactPlayer
+//                                playing
+//                                width={"100%"}
+//                                height={"100vh"}
+//                                //url="https://www.youtube.com/watch?v=668nUCeBHyY"
+//                                url={videoname && videoname}
+//                                muted={true}
+//                                autoplay={true}
+//                                loop={true}
+//                              />
+//                               )}
+
+//                               {/* ==================== For Loading ============== */}
+//                               {filetype && filetype == "updating" && (
+//                                <>
+//                                <div
+//                                  style={{
+//                                    height: "100vh",
+//                                    width: "100%",
+//                                    color: "white",
+//                                    backgroundColor: "black",
+//                                    fontSize: "2rem",
+//                                    display: "flex",
+//                                    flexDirection: "column",
+//                                    justifyContent: "center",
+//                                    alignItems: "center",
+//                                  }}
+//                                >
+//                                  <img
+//                                    style={{
+//                                      width: "100%",
+//                                      height: "100vh",
+//                                      marginBottom: "5px",
+//                                      backgroundSize: "cover",
+//                                      backgroundPosition: "center",
+//                                      backgroundRepeat: "no-repeat",
+//                                      borderRadius: "10px",
+//                                    }}
+//                                    //src={require("./Images/post_my_add_update.gif")}
+//                                    src={require("./Images/skai_update.gif")}
+//                                  />
+//                                  {/* <h1>UPDATING...</h1> */}
+//                                </div>{" "}
+//                              </>
+//                               )}
+
+//                               {/* {----------For Burner Ad----------------} */}
+
+//                               {filetype && filetype == "burnerad" && burnerVideoname && (
+//                                 <>
+//                                 {console.log("burned player")}
+//                                   <video
+//                                     style={{
+//                                       objectFit: "contain",
+//                                       minHeight: "100%",
+//                                       minWidth: "100%",
+//                                       height: "100%",
+//                                       width: "100%",
+//                                     }}
+//                                     controls
+//                                     loop
+//                                     autoPlay
+//                                     muted={true}
+//                                     src={require(`./BurnerAd/${videoname}`)}
+//                                     type="video/mp4"
+//                                   ></video>
+//                                 </>
+//                               )}    
+
+//                             {/* {----------For Burner Ad----------------} */}
+
+//                               {/* <video
+//                           style={{
+//                             backgroundColor: "red",
+//                             objectFit: "cover",
+//                             minHeight: "100%",
+//                             minWidth: "100%",
+//                           }}
+//                           controls
+//                           muted
+//                           loop
+//                           autoPlay={true}
+//                           //src={"http://localhost:8000/videos/surfing_720p.mp4"}
+//                           //src ={videolink}
+//                           src={require(`../../Videos/${filename}.mp4`)}
+//                           type="video/mp4"
+//                         ></video> */}
+//                             </div>
+//                           </>
+//                         ) : (
+//                           <>
+//                             <div
+//                               style={{
+//                                 height: "100vh",
+//                                 width: "100%",
+//                                 color: "white",
+//                                 backgroundColor: "black",
+//                                 fontSize: "1.2rem",
+//                                 display: "flex",
+//                                 flexDirection: "column",
+//                                 justifyContent: "center",
+//                                 alignItems: "center",
+//                               }}
+//                             >
+//                               <img
+//                                 style={{
+//                                   width: "1400px",
+//                                   height: "400px",
+//                                   marginBottom: "5px",
+//                                   backgroundSize: "cover",
+//                                   backgroundPosition: "center",
+//                                   backgroundRepeat: "no-repeat",
+//                                   borderRadius: "10px",
+//                                 }}
+//                                 src={SapsPurple}
+//                               />
+//                               {/* <h1>NO VIDEO SOURCE</h1> */}
+//                             </div>{" "}
+//                           </>
+//                         )}
+//                       </>
+//                     )}
+
+//                     {/* {displaytype == "quadrant" && (
+//                   <Display4screens
+//                     video={videolink}
+//                     video1={videolink1}
+//                     video2={videolink2}
+//                     video3={videolink3}
+//                     video1status={videoStatus1}
+//                     video2status={videoStatus2}
+//                     video3status={videoStatus3}
+//                     video4status={videoStatus4}
+//                     videoname={videotag}
+//                     videoname1={videotag1}
+//                     videoname2={videotag2}
+//                     videoname3={videotag3}
+//                   />
+//                 )} */}
+//                   </>
+//                 ) : (
+//                   <>
+//                     <div
+//                       style={{
+//                         height: "100vh",
+//                         width: "100%",
+//                         color: "white",
+//                         backgroundColor: "black",
+//                         fontSize: "1.2rem",
+//                         display: "flex",
+//                         flexDirection: "column",
+//                         justifyContent: "center",
+//                         alignItems: "center",
+//                       }}
+//                     >
+//                       <img
+//                         style={{
+//                           width: "1400px",
+//                           height: "400px",
+//                           marginBottom: "5px",
+//                           backgroundSize: "cover",
+//                           backgroundPosition: "center",
+//                           backgroundRepeat: "no-repeat",
+//                           borderRadius: "10px",
+//                         }}
+//                         src={SapsPurple}
+//                       />
+//                       {/* <h1>NO VIDEO SOURCE</h1> */}
+//                     </div>
+//                   </>
+//                 )}
+//               </>
+//             )}
+//           </VideoContext.Provider>
+//         </>
+//       )}
+//     </>
+//   );
+// }
 
 export default App;
