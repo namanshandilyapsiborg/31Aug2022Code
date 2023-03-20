@@ -160,6 +160,14 @@ async function getChannel() {
           autoNetworkDetection : true,
           userId: mcadd[0].macaddress,
 
+          keepAliveSettings: {
+            keepAliveMsecs: 3600,
+            freeSocketKeepAliveTimeout: 3600,
+            timeout: 3600,
+            maxSockets: Infinity,
+            maxFreeSockets: 256 
+        },
+
           withPresence : true
           //keepAlive : true,
         });
