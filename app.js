@@ -194,7 +194,7 @@ async function adlistner() {
                     console.log("statusEvent ===> ", statusEvent.category);
                 } else {
                     console.log("//== Connection failed backend ===//");
-                    // pubnub.reconnect();
+                    pubnub.reconnect();
                 }
             },
             category: function (e) {

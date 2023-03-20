@@ -64,6 +64,7 @@ function App() {
 
   const [fullscreenvideotag, setFullscreenvideotag] = useState(null);
   const [videoname, setVideoname] = useState("");
+  const [videonamewebm, setVideonamewebm] = useState("");
   const [burnerVideoname, setBurnerVideoname] = useState("");
   const [imagename, setImagename] = useState("");
   const [videotag, setVideotag] = useState(null);
@@ -101,6 +102,7 @@ function App() {
           console.log("statusEvent ===> ", statusEvent.category);
         }else {
           console.log("//== Connection failed ===//");
+          pubnub.reconnect()
         }
         },
         message: handleMessage,
@@ -127,7 +129,7 @@ function App() {
         }
         else if (message.filetype == "video/webm") {
           console.log("Video name ==> ", message.filetype);
-          setVideoname(message.filename);
+          setVideonamewebm(message.filename);
         }        
         else if (message.filetype == "url") {
           console.log("Video link ==> ", message.filetype);
@@ -319,7 +321,7 @@ function App() {
 
 
 
-                              {filetype && filetype == "video/webm" && videoname &&(
+                              {filetype && filetype == "video/webm" && videonamewebm &&(
                                 <>
                                   <video
                                     style={{
@@ -337,7 +339,7 @@ function App() {
                                     muted={true}
                                     //muted={false}
                                     //src={"http://localhost:8000/videos/surfing_720p.mp4"}
-                                    src={require(`./Videos/${videoname}.webm`)}
+                                    src={require(`./Videos/${videonamewebm}.webm`)}
                                     type="video/webm"
                                   ></video>
                                 </>
